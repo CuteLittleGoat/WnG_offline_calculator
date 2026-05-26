@@ -1,13 +1,13 @@
 # Documentation (Technical)
 
-## 1. Cel i zakres modułu
-Ten repozytorium to **offline-first, statyczny moduł webowy** wspierający grę *Wrath & Glory*. Cała logika działa po stronie klienta (przeglądarka), bez backendu, bez build-stepu i bez zewnętrznych bibliotek JS/CSS.
+## 1. Purpose and module scope
+This repository is an **offline-first, static web module** supporting the *Wrath & Glory* game. All logic runs on the client side (browser), with no backend, no build step, and no external JS/CSS libraries.
 
-Główny cel dokumentu: umożliwić odtworzenie aplikacji **1:1** wyłącznie na podstawie tego pliku.
+The main goal of this document is to make it possible to recreate the application **1:1** using only this file.
 
 ---
 
-## 2. Struktura plików modułu
+## 2. Module file structure
 
 ```text
 /workspace/WnG_offline_calculator
@@ -26,297 +26,297 @@ Główny cel dokumentu: umożliwić odtworzenie aplikacji **1:1** wyłącznie na
     └── Documentation.md
 ```
 
-### Rola plików
-- `index.html` – ekran wejściowy (hub nawigacyjny), lokalne style w `<style>`, linki do dwóch modułów.
-- `XPCalculator.html` – kalkulator kosztu XP dla atrybutów i umiejętności, i18n PL/EN, tabela referencyjna maksymalnych atrybutów ras.
-- `CharacterCreation.html` – rozbudowany arkusz tworzenia postaci (atrybuty, umiejętności, koszty talentów), walidacje, modale, i18n, otwieranie PDF instrukcji.
-- `kalkulatorxp.css` – wspólny styl „green terminal” używany przez `XPCalculator.html` i częściowo przez `CharacterCreation.html`.
-- `HowToUse/*.pdf` – instrukcje uruchamiane dynamicznie wg języka.
-- obrazy (`Skull.png`, `Modal_Icon.png`) – branding oraz grafika w modalu potwierdzenia.
+### File roles
+- `index.html` – landing screen (navigation hub), local styles in `<style>`, links to the two modules.
+- `XPCalculator.html` – XP cost calculator for attributes and skills, PL/EN i18n, reference table for species maximum attributes.
+- `CharacterCreation.html` – extended character creation sheet (attributes, skills, talent costs), validations, modals, i18n, and opening instruction PDFs.
+- `kalkulatorxp.css` – shared “green terminal” style used by `XPCalculator.html` and partly by `CharacterCreation.html`.
+- `HowToUse/*.pdf` – instructions opened dynamically based on language.
+- images (`Skull.png`, `Modal_Icon.png`) – branding and confirmation modal graphic.
 
 ---
 
-## 3. Zależności między plikami
+## 3. Dependencies between files
 
-## 3.1 Zależności nawigacyjne
+## 3.1 Navigation dependencies
 - `index.html` -> `XPCalculator.html`
 - `index.html` -> `CharacterCreation.html`
-- `XPCalculator.html` -> `index.html` (przycisk „Main Page / Strona Główna”)
-- `CharacterCreation.html` -> `index.html` (przycisk powrotu)
+- `XPCalculator.html` -> `index.html` ("Main Page" button)
+- `CharacterCreation.html` -> `index.html` (back button)
 
-## 3.2 Zależności stylów
-- `XPCalculator.html` ładuje `kalkulatorxp.css` przez `<link rel="stylesheet">`.
-- `CharacterCreation.html` ładuje `kalkulatorxp.css` + ma dodatkowe style lokalne w `<style>` (m.in. modale).
-- `index.html` jest stylowany tylko lokalnie (brak importu `kalkulatorxp.css`).
+## 3.2 Style dependencies
+- `XPCalculator.html` loads `kalkulatorxp.css` via `<link rel="stylesheet">`.
+- `CharacterCreation.html` loads `kalkulatorxp.css` + has extra local styles in `<style>` (including modals).
+- `index.html` is styled only locally (no import of `kalkulatorxp.css`).
 
-## 3.3 Zależności assetów i danych
-- `index.html` używa `Skull.png`.
-- `CharacterCreation.html` używa `Modal_Icon.png` w modalu potwierdzenia zmiany języka.
-- `CharacterCreation.html` otwiera `HowToUse/en.pdf` lub `HowToUse/pl.pdf` na podstawie `currentLanguage`.
-- `XPCalculator.html` i `CharacterCreation.html` mają niezależne, ale semantycznie zgodne tabele kosztów XP i limity.
+## 3.3 Asset and data dependencies
+- `index.html` uses `Skull.png`.
+- `CharacterCreation.html` uses `Modal_Icon.png` in the language-change confirmation modal.
+- `CharacterCreation.html` opens `HowToUse/en.pdf` or `HowToUse/pl.pdf` based on `currentLanguage`.
+- `XPCalculator.html` and `CharacterCreation.html` have independent but semantically aligned XP cost tables and limits.
 
 ---
 
-## 4. Style, layout, kolorystyka, fonty, spacing, responsywność
+## 4. Styles, layout, color palette, fonts, spacing, responsiveness
 
-## 4.1 System wizualny
-Motyw jest konsekwentnie „retro terminal / cogitator”:
-- tło: ciemna zieleń + radialne gradienty,
-- kontenery: czarne panele,
-- akcent: neonowa zieleń,
-- glow: zielone rozmyte obwódki i cienie.
+## 4.1 Visual system
+The theme is consistently “retro terminal / cogitator”:
+- background: dark green + radial gradients,
+- containers: black panels,
+- accent: neon green,
+- glow: green blurred outlines and shadows.
 
-## 4.2 Tokeny kolorów (CSS custom properties)
-Wspólne zmienne (w `:root` w `kalkulatorxp.css`):
-- bazowe: `--bg`, `--panel`, `--panel2`
-- tekst: `--text`, `--text2`, `--muted`, `--code`
-- obramowania: `--border`, `--b`, `--b2`, `--div`
-- stany: `--zebra`, `--hover`
-- efekty: `--glow`, `--glowH`
+## 4.2 Color tokens (CSS custom properties)
+Shared variables (in `:root` in `kalkulatorxp.css`):
+- base: `--bg`, `--panel`, `--panel2`
+- text: `--text`, `--text2`, `--muted`, `--code`
+- borders: `--border`, `--b`, `--b2`, `--div`
+- states: `--zebra`, `--hover`
+- effects: `--glow`, `--glowH`
 
-Przykładowe wartości:
-- główny akcent: `#16c60c`
-- tekst: `#9cf09c`
-- tło bazowe: `#031605`
+Sample values:
+- main accent: `#16c60c`
+- text: `#9cf09c`
+- base background: `#031605`
 
-## 4.3 Fonty
-Globalnie ustawiony monospace stack:
+## 4.3 Fonts
+Global monospace stack:
 `"Consolas", "Fira Code", "Source Code Pro", monospace`.
 
 ## 4.4 Layout
-- `XPCalculator.html`: layout grid 2-kolumnowy (`.main { grid-template-columns: 360px 1fr; }`) z panelem instrukcji i przestrzenią kalkulacyjną.
-- `CharacterCreation.html`: pojedynczy kontener `.wrapper` (max szerokość ~1100px), sekcje tabelaryczne i absolutnie pozycjonowany przełącznik języka.
-- `index.html`: centralnie wyśrodkowany panel z logo i przyciskami.
+- `XPCalculator.html`: 2-column grid layout (`.main { grid-template-columns: 360px 1fr; }`) with instruction panel and calculation area.
+- `CharacterCreation.html`: single `.wrapper` container (max width ~1100px), tabular sections, and absolutely positioned language switch.
+- `index.html`: centered panel with logo and buttons.
 
-## 4.5 Spacing i rytm
-- dominują odstępy 8/10/12/14/16/24 px,
-- promienie zaokrągleń 4/6/10 px,
-- uppercase + letter-spacing dla nagłówków i przycisków.
+## 4.5 Spacing and rhythm
+- dominant spacing: 8/10/12/14/16/24 px,
+- border radius: 4/6/10 px,
+- uppercase + letter-spacing for headers and buttons.
 
-## 4.6 Responsywność
-- `kalkulatorxp.css` ma breakpoint `@media (max-width: 980px)` przełączający kalkulator XP na układ jednokolumnowy.
-- Tabele mają kontenery z przewijaniem (`overflow:auto` / `overflow-x:auto`), co zapobiega łamaniu layoutu na małych ekranach.
-- `index.html` używa `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))` dla responsywnych przycisków.
+## 4.6 Responsiveness
+- `kalkulatorxp.css` has a breakpoint `@media (max-width: 980px)` switching the XP calculator to a single-column layout.
+- Tables use scroll containers (`overflow:auto` / `overflow-x:auto`) to prevent layout breaking on small screens.
+- `index.html` uses `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))` for responsive buttons.
 
 ---
 
-## 5. Logika JavaScript – szczegóły funkcji
+## 5. JavaScript logic – function details
 
 ## 5.1 `XPCalculator.html`
 
-### Dane i konfiguracja
-- `attributeCosts`: tabela kosztów skumulowanych poziomów 0..12.
-- `skillCosts`: tabela kosztów skumulowanych poziomów 0..8.
-- `translations`: obiekt i18n (`pl`, `en`) zawierający:
-  - `labels` (teksty UI),
-  - `races` (nazwy ras),
-  - `attributes` (nazwy atrybutów).
-- `attributeMaximumRows` + `attributeKeys`: dane do tabeli referencyjnej max atrybutów ras.
+### Data and configuration
+- `attributeCosts`: cumulative cost table for levels 0..12.
+- `skillCosts`: cumulative cost table for levels 0..8.
+- `translations`: i18n object (`pl`, `en`) containing:
+  - `labels` (UI text),
+  - `races` (species names),
+  - `attributes` (attribute names).
+- `attributeMaximumRows` + `attributeKeys`: data for the species max-attributes reference table.
 
-### Funkcje i ich odpowiedzialność
+### Functions and responsibilities
 1. `clampValue(value, min, max)`
-   - **co robi:** normalizuje wejście numeryczne do int i ogranicza do zakresu.
-   - **gdzie używana:** `recalcTable`.
-   - **dlaczego:** zabezpiecza przed wartościami spoza zakresu i `NaN`.
+   - **what it does:** normalizes numeric input to int and clamps to range.
+   - **where used:** `recalcTable`.
+   - **why:** protects against out-of-range values and `NaN`.
 
 2. `calculateRowCost(current, target, costs)`
-   - **co robi:** zwraca koszt przejścia `current -> target` jako różnicę wartości skumulowanych; gdy `target <= current`, koszt = 0.
-   - **gdzie:** `recalcTable`.
-   - **dlaczego:** modeluje regułę płacenia wyłącznie za podniesienie poziomu.
+   - **what it does:** returns the cost for `current -> target` as the difference of cumulative values; when `target <= current`, cost = 0.
+   - **where:** `recalcTable`.
+   - **why:** models the rule of paying only for level increases.
 
 3. `recalcTable(tableId, costs, min, max)`
-   - **co robi:** dla każdego wiersza tabeli liczy koszt i wpisuje go do komórki `.cost`, zwraca subtotal.
-   - **gdzie:** `recalcAll`.
-   - **dlaczego:** ujednolica przeliczanie dla atrybutów i umiejętności.
+   - **what it does:** for each table row, calculates cost and writes it to `.cost`; returns subtotal.
+   - **where:** `recalcAll`.
+   - **why:** standardizes recalculation for attributes and skills.
 
 4. `recalcAll()`
-   - **co robi:** sumuje subtotal atrybutów + umiejętności i aktualizuje `#totalXp`.
-   - **gdzie:** eventy `input/change`, inicjalizacja, reset.
-   - **dlaczego:** centralny punkt aktualizacji wyniku.
+   - **what it does:** sums attributes subtotal + skills subtotal and updates `#totalXp`.
+   - **where:** `input/change` events, initialization, reset.
+   - **why:** central result update point.
 
 5. `renderMaxAttributesTable(lang)`
-   - **co robi:** renderuje HTML tabeli referencyjnej ras i max atrybutów w wybranym języku.
-   - **gdzie:** `applyLanguage`.
-   - **dlaczego:** utrzymuje tłumaczenia i dane referencyjne spójne z aktywnym językiem.
+   - **what it does:** renders the species/max-attributes reference table HTML in the selected language.
+   - **where:** `applyLanguage`.
+   - **why:** keeps translations and reference data consistent with active language.
 
 6. `applyLanguage(lang)`
-   - **co robi:** podmienia wszystkie etykiety i nagłówki UI, ustawia `document.lang`.
-   - **gdzie:** init + `change` na `#languageSelect`.
-   - **dlaczego:** pełna internacjonalizacja bez przeładowania strony.
+   - **what it does:** replaces all UI labels and headers, sets `document.lang`.
+   - **where:** init + `change` on `#languageSelect`.
+   - **why:** full internationalization without page reload.
 
-### Mechanika interfejsu
-- automatyczne przeliczenie na `input` i `change` dla pól liczbowych,
-- `Reset` zeruje wszystkie pola i przelicza total,
-- przełącznik języka działa bez resetu danych (w tym module).
+### Interface mechanics
+- automatic recalculation on `input` and `change` for numeric fields,
+- `Reset` clears all fields and recalculates total,
+- language switch works without data reset (in this module).
 
 ## 5.2 `CharacterCreation.html`
 
-### Dane i konfiguracja
-- `translations` (`pl`, `en`) zawiera:
+### Data and configuration
+- `translations` (`pl`, `en`) contains:
   - `labels`,
-  - skróty atrybutów,
-  - etykiety umiejętności (2 kolumny po 9),
-  - komunikaty błędów,
-  - nazwy ras i nagłówki max atrybutów.
-- `attributeCosts` (1..12) i `skillCosts` (0..8).
+  - attribute abbreviations,
+  - skill labels (2 columns of 9),
+  - error messages,
+  - species names and max-attributes headers.
+- `attributeCosts` (1..12) and `skillCosts` (0..8).
 - `maxAttributeRows`, `maxAttributeKeys`.
 - `TALENT_COUNT = 20`.
 
-### Funkcje i ich odpowiedzialność
+### Functions and responsibilities
 1. `updateLanguage(lang)`
-   - **co robi:** aktualizuje wszystkie teksty UI wg słownika; odświeża tabelę max atrybutów jeśli modal jest otwarty.
-   - **gdzie:** init, po potwierdzonej zmianie języka.
-   - **dlaczego:** pełna zmiana języka w runtime.
+   - **what it does:** updates all UI text using dictionary data; refreshes max-attributes table if modal is open.
+   - **where:** init, after confirmed language change.
+   - **why:** full runtime language switch.
 
 2. `renderSpeciesMaxTable()`
-   - **co robi:** buduje `thead` i `tbody` tabeli max atrybutów przez API DOM.
-   - **gdzie:** otwarcie modala, `updateLanguage` przy otwartym modalu.
-   - **dlaczego:** zapewnia dynamiczną lokalizację nagłówków i nazw ras.
+   - **what it does:** builds the max-attributes table `thead` and `tbody` via DOM API.
+   - **where:** modal open, `updateLanguage` while modal is open.
+   - **why:** ensures dynamic localization of headers and species names.
 
 3. `resetAll()`
-   - **co robi:** resetuje formularz do wartości domyślnych (XP pool=155, atrybuty=1 poza Speed=6, skille=0, talenty puste/0).
-   - **gdzie:** po potwierdzonej zmianie języka.
-   - **dlaczego:** celowy reset integralności danych przy zmianie języka.
+   - **what it does:** resets form to defaults (XP pool=155, attributes=1 except Speed=6, skills=0, talents empty/0).
+   - **where:** after confirmed language change.
+   - **why:** intentional data-integrity reset during language change.
 
 4. `recalcXP()`
-   - **co robi:**
-     - waliduje i klamruje wartości wejściowe,
-     - liczy koszt atrybutów (suma kosztów skumulowanych poziomów),
-     - liczy koszt umiejętności,
-     - dodaje ręczne koszty talentów,
-     - wylicza `xpRemaining = xpPool - xpSpent`,
-     - uruchamia walidacje błędów.
-   - **gdzie:** większość eventów wejściowych, init, reset.
-   - **dlaczego:** główny silnik obliczeniowy modułu.
+   - **what it does:**
+     - validates and clamps inputs,
+     - calculates attribute cost (sum of cumulative costs of final levels),
+     - calculates skill cost,
+     - adds manual talent costs,
+     - computes `xpRemaining = xpPool - xpSpent`,
+     - triggers error validations.
+   - **where:** most input events, init, reset.
+   - **why:** main module calculation engine.
 
 5. `checkSkillTree()`
-   - **co robi:** waliduje zasadę „Tree of Learning”: dla każdego skilla `level > 1` liczba aktywnych skilli (`>0`) musi być >= `level`.
-   - **gdzie:** wywoływana przez `recalcXP()` jeśli XP nieprzekroczone.
-   - **dlaczego:** implementacja reguły podręcznikowej wskazanej w UI.
+   - **what it does:** validates “Tree of Learning”: for each skill with `level > 1`, count of active skills (`>0`) must be >= `level`.
+   - **where:** called by `recalcXP()` if XP limit is not exceeded.
+   - **why:** implementation of rulebook rule shown in UI.
 
 6. `displayError(msg)`
-   - **co robi:** wpisuje komunikat do `#errorMessage`.
-   - **dlaczego:** pojedynczy punkt prezentacji błędów.
+   - **what it does:** writes message to `#errorMessage`.
+   - **why:** single error presentation point.
 
 7. `attachDefaultOnBlur(selector, defaultValue)`
-   - **co robi:** uzupełnia puste/niepoprawne pola wartościami domyślnymi po utracie fokusu.
-   - **dlaczego:** stabilizuje dane wejściowe i unika `NaN`.
+   - **what it does:** fills empty/invalid fields with default values on blur.
+   - **why:** stabilizes input data and avoids `NaN`.
 
 8. `adjustTalentFontSize(el)`
-   - **co robi:** zmniejsza font od 16px do min 10px, aż tekst mieści się w `textarea`.
-   - **dlaczego:** poprawa czytelności długich nazw talentów bez rozbijania layoutu.
+   - **what it does:** reduces font size from 16px down to min 10px until text fits in `textarea`.
+   - **why:** improves readability of long talent names without breaking layout.
 
 9. `toggleConfirmModal`, `showConfirmationModal`, `showInfoModal`
-   - **co robią:** infrastruktura modala potwierdzeń/informacji oparta o Promise i event cleanup.
-   - **gdzie:** zmiana języka (potwierdzenie), potencjalnie inne akcje informacyjne.
-   - **dlaczego:** asynchroniczna, reużywalna mechanika dialogów.
+   - **what they do:** confirmation/info modal infrastructure based on Promise and event cleanup.
+   - **where:** language change (confirmation), potentially other info actions.
+   - **why:** asynchronous, reusable dialog mechanics.
 
 10. `toggleSpeciesMaxModal(forceOpen)`
-   - **co robi:** steruje otwieraniem/zamykaniem modala max atrybutów i aria-hidden.
-   - **dlaczego:** dostępność + kontrola UI.
+   - **what it does:** controls open/close of max-attributes modal and `aria-hidden`.
+   - **why:** accessibility + UI control.
 
-### Mechanika interfejsu
-- zmiana języka wymaga potwierdzenia i resetuje dane,
-- ESC zamyka modale,
-- kliknięcie overlay zamyka modal,
-- przycisk instrukcji otwiera właściwy PDF,
-- pola liczbowe reagują live (`input` + `change`).
+### Interface mechanics
+- language change requires confirmation and resets data,
+- ESC closes modals,
+- clicking overlay closes modal,
+- instruction button opens the appropriate PDF,
+- numeric fields react live (`input` + `change`).
 
 ---
 
-## 6. Logika obliczeń
+## 6. Calculation logic
 
-## 6.1 Model kosztów skumulowanych
-Atrybuty i umiejętności są liczone przez koszty skumulowane, np. w XP kalkulatorze:
+## 6.1 Cumulative cost model
+Attributes and skills are calculated with cumulative costs, e.g. in the XP calculator:
 
 ```js
 rowCost = costs[target] - costs[current]
 ```
 
-- **co robi:** wylicza koszt przejścia pomiędzy poziomami.
-- **gdzie:** `calculateRowCost()` w `XPCalculator.html`.
-- **dlaczego:** to bezpieczniejszy i prostszy model niż sumowanie krok-po-kroku.
+- **what it does:** calculates the transition cost between levels.
+- **where:** `calculateRowCost()` in `XPCalculator.html`.
+- **why:** safer and simpler than step-by-step summation.
 
-W `CharacterCreation.html` koszt dla sekcji jest liczony jako suma kosztów końcowych wpisanych poziomów (bez wartości bazowej „current”), co odpowiada procesowi tworzenia postaci od poziomu startowego.
+In `CharacterCreation.html`, section cost is calculated as the sum of cumulative costs of entered final levels (without a base “current” value), which matches character creation from the starting level.
 
-## 6.2 Walidacje zakresów
-- atrybuty: 1..12 (lub 0..12 w XP Calculatorze, bo ten moduł liczy różnicę),
-- umiejętności: 0..8,
-- koszty talentów: >=0,
-- `xpPool`: liczba całkowita >=0.
+## 6.2 Range validations
+- attributes: 1..12 (or 0..12 in XP Calculator because this module calculates a difference),
+- skills: 0..8,
+- talent costs: >=0,
+- `xpPool`: integer >=0.
 
-## 6.3 Walidacje regułowe
-- przekroczenie puli XP -> błąd „Too much XP spent / Przekroczono pulę PD”.
-- reguła Tree of Learning -> błąd przy niespełnieniu relacji liczby aktywnych skilli do poziomów.
+## 6.3 Rule validations
+- XP pool exceeded -> error “Too much XP spent”.
+- Tree of Learning rule -> error when relation between active-skill count and levels is not satisfied.
 
 ---
 
-## 7. Struktura danych (in-memory)
+## 7. Data structures (in-memory)
 
-## 7.1 Słowniki i18n
-W obu modułach i18n dane są trzymane jako zagnieżdżone obiekty:
-- poziom 1: kod języka (`pl`, `en`),
-- poziom 2: sekcje (`labels`, `errors`, `races`, itd.),
-- poziom 3: klucze używane przez DOM update.
+## 7.1 i18n dictionaries
+In both modules, i18n data is stored as nested objects:
+- level 1: language code (`pl`, `en`),
+- level 2: sections (`labels`, `errors`, `races`, etc.),
+- level 3: keys used by DOM updates.
 
-## 7.2 Tabele kosztów
-Mapy `number -> number` reprezentujące koszt skumulowany dla poziomu.
+## 7.2 Cost tables
+`number -> number` maps representing cumulative cost for each level.
 
-## 7.3 Dane tabel referencyjnych ras
-Tablice obiektów:
+## 7.3 Species reference table data
+Arrays of objects:
 ```js
 { race: 'race_2', values: [12, 12, 7, 7, 8, 7, 7, 7] }
 ```
-- **co robi:** trzyma max atrybutów dla rasy.
-- **gdzie:** render tabel referencyjnych w obu modułach.
-- **dlaczego:** ułatwia tłumaczenie nazw ras i jednolite renderowanie.
+- **what it does:** stores max attributes per species.
+- **where:** rendering reference tables in both modules.
+- **why:** simplifies species-name translations and consistent rendering.
 
 ---
 
-## 8. Skrypty pomocnicze
-Brak osobnych plików `.js` i brak narzędzi build/test. Cały JS jest osadzony inline w dokumentach HTML.
+## 8. Supporting scripts
+No standalone `.js` files and no build/test tooling. All JS is embedded inline in HTML documents.
 
-Konsekwencja: odtwarzając moduł 1:1 należy zachować:
-- kolejność deklaracji funkcji i stałych,
-- identyczne `id` elementów HTML,
-- identyczne nazwy klas CSS i selektory używane przez JS.
+Consequence: to recreate the module 1:1, preserve:
+- function and constant declaration order,
+- identical HTML element `id`s,
+- identical CSS class names and selectors used by JS.
 
 ---
 
-## 9. Procedura odtworzenia modułu 1:1 po utracie plików
+## 9. Procedure to recreate module 1:1 after file loss
 
-1. **Utwórz strukturę katalogów** dokładnie jak w sekcji 2.
-2. **Odtwórz `kalkulatorxp.css`** z tokenami `:root`, globalnymi regułami, komponentami (`.topbar`, `.panel`, `.dataTable`, `.btn`) i media query `max-width: 980px`.
-3. **Odtwórz `index.html`**:
-   - lokalny `<style>` z tym samym motywem,
-   - `<main>` z logo `Skull.png`,
-   - linki do `XPCalculator.html` i `CharacterCreation.html`.
-4. **Odtwórz `XPCalculator.html`**:
-   - układ topbar + panel + workspace,
-   - dwie tabele wejściowe (`attributesTable`, `skillsTable`) + kolumna kosztu,
-   - referencyjna tabela max atrybutów,
-   - JS: i18n, tabele kosztów, `recalcAll`, `applyLanguage`, reset.
-5. **Odtwórz `CharacterCreation.html`**:
-   - sekcja XP, tabele atrybutów, umiejętności, talentów,
-   - modale: `speciesMaxModal`, `confirmModal`,
-   - JS: i18n, `recalcXP`, `checkSkillTree`, obsługa modali, reset przy zmianie języka.
-6. **Wgraj assets binarne**:
+1. **Create directory structure** exactly as in section 2.
+2. **Recreate `kalkulatorxp.css`** with `:root` tokens, global rules, components (`.topbar`, `.panel`, `.dataTable`, `.btn`), and media query `max-width: 980px`.
+3. **Recreate `index.html`**:
+   - local `<style>` with the same theme,
+   - `<main>` with `Skull.png` logo,
+   - links to `XPCalculator.html` and `CharacterCreation.html`.
+4. **Recreate `XPCalculator.html`**:
+   - topbar + panel + workspace layout,
+   - two input tables (`attributesTable`, `skillsTable`) + cost column,
+   - max-attributes reference table,
+   - JS: i18n, cost tables, `recalcAll`, `applyLanguage`, reset.
+5. **Recreate `CharacterCreation.html`**:
+   - XP section, attribute/skill/talent tables,
+   - modals: `speciesMaxModal`, `confirmModal`,
+   - JS: i18n, `recalcXP`, `checkSkillTree`, modal handling, reset on language change.
+6. **Upload binary assets**:
    - `Skull.png`, `Modal_Icon.png`, `HowToUse/en.pdf`, `HowToUse/pl.pdf`.
-7. **Weryfikacja manualna**:
-   - otwórz `index.html` bez serwera,
-   - przejdź do obu modułów,
-   - sprawdź przełączanie języka, przeliczenia, błędy, otwieranie PDF, działanie ESC w modalach.
+7. **Manual verification**:
+   - open `index.html` without a server,
+   - go to both modules,
+   - verify language switching, calculations, errors, PDF opening, and ESC behavior in modals.
 
 ---
 
-## 10. Minimalna lista kontrolna zgodności 1:1
-- [ ] identyczne nazwy plików i ścieżki względne,
-- [ ] identyczne `id` pól formularza (JS opiera się na twardych selektorach),
-- [ ] identyczne zakresy `min/max` inputów,
-- [ ] identyczne tabele kosztów `attributeCosts` i `skillCosts`,
-- [ ] identyczna logika `Tree of Learning`,
-- [ ] identyczne teksty i18n (PL/EN),
-- [ ] identyczne klasy CSS i breakpointy,
-- [ ] obecność PDF i obrazów w tych samych lokalizacjach.
+## 10. Minimal 1:1 compliance checklist
+- [ ] identical file names and relative paths,
+- [ ] identical form-field `id`s (JS relies on hard-coded selectors),
+- [ ] identical input `min/max` ranges,
+- [ ] identical `attributeCosts` and `skillCosts` tables,
+- [ ] identical `Tree of Learning` logic,
+- [ ] identical i18n texts (PL/EN),
+- [ ] identical CSS classes and breakpoints,
+- [ ] PDF and image assets present in the same locations.
 
-Jeżeli wszystkie punkty są spełnione, moduł powinien działać i wyglądać tak samo jak oryginał.
+If all points are satisfied, the module should work and look the same as the original.
