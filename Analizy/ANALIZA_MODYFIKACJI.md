@@ -223,3 +223,72 @@ Na podstawie najnowszej odpowiedzi użytkownika doprecyzowano:
 
 Na ten moment, po otrzymanych wyjaśnieniach, **brak krytycznych pytań blokujących** dalsze etapy.
 Jeśli pojawi się potrzeba, dodatkowe pytania zostaną dopisane w tej sekcji przed wejściem w implementację.
+
+## Zmiany wykonane w kodzie
+
+### Data wdrożenia
+2026-05-26
+
+### Etap 2 — przygotowanie i inwentaryzacja
+
+Sprawdzono aktywne pliki pod kątem fraz: `Save`, `Load`, `firebase`, `firestore`, `secretOverlay`, `Tajny przycisk`, `Koza`.
+
+Ustalenia po skanie aktywnych plików:
+- `index.html` zawierał przycisk **Tajny przycisk!** i modal z `Koza.gif`.
+- `TworzeniePostaci.html` zawierał importy Firebase, konfigurację `config/firebase-config.js` oraz logikę Save/Load.
+- `KalkulatorXP.html` i `TworzeniePostaci.html` miały domyślny język ustawiony na PL.
+
+### Etap 3 — UI i nazewnictwo EN-first
+
+#### Plik: `index.html`
+- Zmieniono `lang="pl"` na `lang="en"`.
+- Zmieniono etykiety przycisków:
+  - `Kalkulator PD` → `XP Calculator`
+  - `Tworzenie Postaci` → `Character Creation`
+- Zmieniono linki na nowe nazwy plików:
+  - `KalkulatorXP.html` → `XPCalculator.html`
+  - `TworzeniePostaci.html` → `CharacterCreation.html`
+
+#### Plik: `KalkulatorXP.html` → `XPCalculator.html`
+- Przemianowano plik na `XPCalculator.html`.
+- Zmieniono `lang="pl"` na `lang="en"`.
+- Zmieniono domyślny język:
+  - było: `let currentLanguage = "pl";`
+  - jest: `let currentLanguage = "en";`
+- Zmieniono kolejność opcji języka tak, by `English` było pierwsze.
+- Zmieniono nawigację do strony głównej na lokalną:
+  - było: `../Main/index.html`
+  - jest: `index.html`
+
+#### Plik: `TworzeniePostaci.html` → `CharacterCreation.html`
+- Przemianowano plik na `CharacterCreation.html`.
+- Zmieniono `lang="pl"` na `lang="en"`.
+- Zmieniono domyślny język:
+  - było: `let currentLanguage = 'pl';`
+  - jest: `let currentLanguage = 'en';`
+- Zmieniono nawigację do strony głównej na lokalną (`index.html`).
+
+### Etap 4 — usunięcie wskazanych elementów UI
+
+#### Plik: `index.html`
+- Usunięto przycisk **Tajny przycisk!**.
+- Usunięto modal `secretOverlay` i powiązaną logikę JS.
+- Usunięto style CSS powiązane z tajnym przyciskiem i overlayem.
+
+#### Plik: `CharacterCreation.html`
+- Usunięto przyciski/funkcje Save/Load z interfejsu i tłumaczeń.
+- Usunięto importy Firebase SDK oraz `config/firebase-config.js`.
+- Usunięto logikę Firebase (inicjalizacja, zapis, odczyt, payload).
+- Zachowano modal ostrzegający przy zmianie języka (`confirmModal`) zgodnie z ustaleniami.
+
+### Etap 5 — podsumowanie i analiza plików nieużywanych
+
+Po wdrożeniu Etapów 2–4 następujące pliki są kandydatami do usunięcia w kolejnym kroku porządkowym (Etap 6):
+- `config/firebase-config.js` (brak aktywnych odwołań po cleanupie kodu).
+- `config/FirebaseREADME.md` (opisuje przepływ usunięty z aktywnej aplikacji).
+- `Koza.gif` (brak aktywnych odwołań po usunięciu secret overlay).
+- `Old/` (archiwalne pliki, poza bieżącym zakresem runtime aplikacji).
+
+Wpływ na dokumentację:
+- Aktualizacja dokumentacji użytkowej i technicznej jest nadal wymagana w kolejnym etapie (EN-first + usunięcie nieaktualnych opisów Save/Load/Firebase/secret button).
+- W tym kroku zaktualizowano wyłącznie plik analityczny, zgodnie z zakresem etapu.

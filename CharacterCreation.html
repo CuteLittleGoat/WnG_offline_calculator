@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- Plik interfejsu modułu: struktura sekcji i elementy interaktywne / Module UI file: section structure and interactive elements -->
-<html lang="pl">
+<html lang="en">
 <!-- Sekcja konfiguracji dokumentu i zasobów / Document configuration and asset section -->
 <head>
   <meta charset="UTF-8">
@@ -51,23 +51,6 @@
       flex-wrap:wrap;
       margin-bottom:8px;
     }
-    .data-actions{
-      display:flex;
-      gap:10px;
-      margin:0 0 12px;
-      flex-wrap:wrap;
-    }
-    .data-actions button{
-      width:auto;
-      padding:8px 12px;
-      border-radius:6px;
-      border:1px solid var(--b);
-      background:var(--panel2);
-      color:var(--text);
-      letter-spacing:.06em;
-      cursor:pointer;
-    }
-    .data-actions button:hover{background:var(--hover);}
     .language-switcher{
       position:absolute;
       top:16px;
@@ -285,10 +268,6 @@
       <input type="number" id="xpPool" value="155" min="0">
       <span id="xpRemainingLabel">Pozostało: <strong id="xpRemaining">155</strong></span>
     </div>
-    <div class="data-actions">
-      <button type="button" id="saveToFirebaseButton">Zapisz</button>
-      <button type="button" id="loadFromFirebaseButton">Wczytaj</button>
-    </div>
 
     <!-- Obszar komunikatów o błędach / Error message area -->
     <div class="error-message" id="errorMessage"> </div>
@@ -487,10 +466,6 @@
   </div>
 
 <!-- Skrypt odpowiedzialny za interakcję strony / Script responsible for page interactions -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<!-- WAŻNE: Po skopiowaniu modułu na inny serwer każda grupa musi podmienić config/firebase-config.js na własny projekt Firebase. / IMPORTANT: After copying this module to another server, each group must replace config/firebase-config.js with its own Firebase project. -->
-<script src="config/firebase-config.js"></script>
 <!-- Sekcja JavaScript / JavaScript Section -->
 <script>
     /* Inicjalizacja po załadowaniu strony / Initialization after page load */
@@ -515,14 +490,8 @@ const translations = {
             backToMainButton: 'Strona Główna',
             showSpeciesMaxButton: 'Maksymalne wartości atrybutów',
             speciesMaxModalTitle: 'Maksymalne wartości atrybutów',
-            saveButton: 'Zapisz',
-            loadButton: 'Wczytaj',
             confirmYes: 'Tak',
             confirmNo: 'Nie',
-            confirmSaveTitle: 'Potwierdzenie zapisu',
-            confirmSaveMessage: 'Czy na pewno chcesz zapisać aktualny stan postaci?',
-            confirmLoadTitle: 'Potwierdzenie wczytania',
-            confirmLoadMessage: 'Czy na pewno chcesz wczytać zapisany stan postaci?',
             modalImageAlt: 'Ilustracja potwierdzenia',
             infoOk: 'OK'
           },
@@ -547,10 +516,6 @@ const translations = {
             tooMuchXP: 'Przekroczono dostępną pulę PD!',
             treeOfLearning: 'Niezgodność z zasadą Drzewa Nauki (str. 26)',
             languageChangeWarning: 'Zmiana języka spowoduje zresetowanie wszystkich danych. Czy na pewno chcesz kontynuować?',
-            saveSuccess: 'Stan postaci został zapisany.',
-            saveError: 'Nie udało się zapisać stanu postaci.',
-            loadSuccess: 'Stan postaci został wczytany.',
-            loadError: 'Nie udało się wczytać stanu postaci.'
           }
         },
         en: {
@@ -568,14 +533,8 @@ const translations = {
             backToMainButton: 'Main Page',
             showSpeciesMaxButton: 'Maximum attribute values',
             speciesMaxModalTitle: 'Maximum attribute values',
-            saveButton: 'Save',
-            loadButton: 'Load',
             confirmYes: 'Yes',
             confirmNo: 'No',
-            confirmSaveTitle: 'Save confirmation',
-            confirmSaveMessage: 'Do you want to save the current character state?',
-            confirmLoadTitle: 'Load confirmation',
-            confirmLoadMessage: 'Do you want to load the saved character state?',
             modalImageAlt: 'Confirmation image',
             infoOk: 'OK'
           },
@@ -600,16 +559,12 @@ const translations = {
             tooMuchXP: 'Too much XP spent!',
             treeOfLearning: '"Tree of Learning" rule broken (page 26)',
             languageChangeWarning: 'Changing the language will reset all data. Are you sure you want to continue?',
-            saveSuccess: 'Character state has been saved.',
-            saveError: 'Failed to save character state.',
-            loadSuccess: 'Character state has been loaded.',
-            loadError: 'Failed to load character state.'
           }
         }
       };
 
       // --- Domyślny język (polski) / Default language (Polish) ---
-      let currentLanguage = 'pl';
+      let currentLanguage = 'en';
 
       const maxAttributeRows = [
         { race: 'race_1', values: [8, 8, 8, 8, 8, 8, 8, 8] },
@@ -625,8 +580,6 @@ const translations = {
       ];
 
       const maxAttributeKeys = ['attribute_1','attribute_2','attribute_3','attribute_4','attribute_5','attribute_6','attribute_7','attribute_8'];
-      const modalImageUrl = './Modal_Icon.png';
-      const firebaseContext = initializeFirebaseContext();
 
 
       // --- Koszty atrybutów i umiejętności / Attribute and skill costs ---
@@ -660,8 +613,6 @@ const translations = {
         document.getElementById('backToMainButton').innerText = t.labels.backToMainButton;
         document.getElementById('showSpeciesMaxButton').innerText = t.labels.showSpeciesMaxButton;
         document.getElementById('speciesMaxModalTitle').innerText = t.labels.speciesMaxModalTitle;
-        document.getElementById('saveToFirebaseButton').innerText = t.labels.saveButton;
-        document.getElementById('loadFromFirebaseButton').innerText = t.labels.loadButton;
         document.getElementById('confirmModalYesButton').innerText = t.labels.confirmYes;
         document.getElementById('confirmModalNoButton').innerText = t.labels.confirmNo;
         document.getElementById('confirmModalImage').alt = t.labels.modalImageAlt;
@@ -795,91 +746,6 @@ const translations = {
           checkSkillTree();
         }
       }
-
-      function initializeFirebaseContext() {
-        if (typeof firebase === 'undefined' || !window.firebaseConfig) {
-          return { ready: false, characterRef: null };
-        }
-
-        if (!firebase.apps.length) {
-          firebase.initializeApp(window.firebaseConfig);
-        }
-        const db = firebase.firestore();
-        return {
-          ready: true,
-          characterRef: db.collection('character_builder').doc('current')
-        };
-      }
-
-      function collectCurrentState() {
-        const attributes = {};
-        ['S', 'Wt', 'Zr', 'I', 'SW', 'Int', 'Ogd', 'Speed'].forEach((key) => {
-          attributes[key] = parseInt(document.getElementById(`attr_${key}`).value, 10) || 1;
-        });
-
-        const skills = {};
-        for (let i = 1; i <= 9; i++) {
-          skills[`Column1Row${i}`] = parseInt(document.getElementById(`skill_Column1Row${i}`).value, 10) || 0;
-          skills[`Column2Row${i}`] = parseInt(document.getElementById(`skill_Column2Row${i}`).value, 10) || 0;
-        }
-
-        const talents = [];
-        for (let i = 1; i <= TALENT_COUNT; i++) {
-          talents.push({
-            name: document.getElementById(`talent_name_${i}`).value || '',
-            cost: parseInt(document.getElementById(`talent_cost_${i}`).value, 10) || 0
-          });
-        }
-
-        const formSnapshot = {};
-        document.querySelectorAll('input, textarea, select').forEach((field) => {
-          if (field.id) {
-            formSnapshot[field.id] = field.value;
-          }
-        });
-
-        const errorMessage = document.getElementById('errorMessage').innerText.trim();
-        const xpPool = parseInt(document.getElementById('xpPool').value, 10) || 0;
-        const xpAvailable = parseInt(document.getElementById('xpRemaining').innerText, 10) || 0;
-        const xpTotal = xpPool;
-        const xpSpent = xpTotal - xpAvailable;
-
-        return {
-          schemaVersion: 1,
-          module: 'Kalkulator/TworzeniePostaci',
-          lang: currentLanguage,
-          savedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          savedBy: 'anonymous-web-client',
-          xpPool,
-          xpTotal,
-          xpSpent,
-          xpAvailable,
-          hasValidationErrors: errorMessage.length > 0,
-          validationMessages: errorMessage ? [errorMessage] : [],
-          attributes,
-          skills,
-          talents,
-          formSnapshot
-        };
-      }
-
-      function applySavedState(data) {
-        const snapshot = data.formSnapshot || {};
-        Object.entries(snapshot).forEach(([id, value]) => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.value = value;
-          }
-        });
-
-        if (data.lang && translations[data.lang]) {
-          document.getElementById('languageSelect').value = data.lang;
-          updateLanguage(data.lang);
-        }
-
-        recalcXP();
-      }
-
       function toggleConfirmModal(forceOpen, config = {}) {
         const modal = document.getElementById('confirmModal');
         const title = document.getElementById('confirmModalTitle');
@@ -990,82 +856,6 @@ const translations = {
             yesText: translations[currentLanguage].labels.infoOk
           });
         });
-      }
-
-      async function saveStateToFirebase() {
-        const t = translations[currentLanguage];
-        const confirmed = await showConfirmationModal({
-          title: t.labels.confirmSaveTitle,
-          message: t.labels.confirmSaveMessage,
-          imageUrl: modalImageUrl
-        });
-        if (!confirmed) return;
-        if (!firebaseContext.ready) {
-          await showInfoModal({
-            title: t.labels.confirmSaveTitle,
-            message: t.errors.saveError,
-            imageUrl: modalImageUrl
-          });
-          return;
-        }
-        try {
-          const payload = collectCurrentState();
-          await firebaseContext.characterRef.set(payload);
-          await showInfoModal({
-            title: t.labels.confirmSaveTitle,
-            message: t.errors.saveSuccess,
-            imageUrl: modalImageUrl
-          });
-        } catch (error) {
-          console.error(error);
-          await showInfoModal({
-            title: t.labels.confirmSaveTitle,
-            message: t.errors.saveError,
-            imageUrl: modalImageUrl
-          });
-        }
-      }
-
-      async function loadStateFromFirebase() {
-        const t = translations[currentLanguage];
-        const confirmed = await showConfirmationModal({
-          title: t.labels.confirmLoadTitle,
-          message: t.labels.confirmLoadMessage,
-          imageUrl: modalImageUrl
-        });
-        if (!confirmed) return;
-        if (!firebaseContext.ready) {
-          await showInfoModal({
-            title: t.labels.confirmLoadTitle,
-            message: t.errors.loadError,
-            imageUrl: modalImageUrl
-          });
-          return;
-        }
-        try {
-          const snapshot = await firebaseContext.characterRef.get();
-          if (snapshot.exists) {
-            applySavedState(snapshot.data());
-            await showInfoModal({
-              title: t.labels.confirmLoadTitle,
-              message: translations[currentLanguage].errors.loadSuccess,
-              imageUrl: modalImageUrl
-            });
-          } else {
-            await showInfoModal({
-              title: t.labels.confirmLoadTitle,
-              message: translations[currentLanguage].errors.loadError,
-              imageUrl: modalImageUrl
-            });
-          }
-        } catch (error) {
-          console.error(error);
-          await showInfoModal({
-            title: t.labels.confirmLoadTitle,
-            message: translations[currentLanguage].errors.loadError,
-            imageUrl: modalImageUrl
-          });
-        }
       }
 
       // --- Funkcja wyświetlająca komunikaty o błędach / Function to display error messages ---
@@ -1191,12 +981,10 @@ const translations = {
         const manualPath = `HowToUse/${currentLanguage}.pdf`;
         window.open(manualPath, '_blank', 'noopener');
       });
-      document.getElementById('saveToFirebaseButton').addEventListener('click', saveStateToFirebase);
-      document.getElementById('loadFromFirebaseButton').addEventListener('click', loadStateFromFirebase);
 
       document.getElementById('backToMainButton').addEventListener('click', () => {
         // --- WAŻNE: Po wdrożeniu na inny serwer zaktualizuj ścieżkę powrotu do modułu Main zgodnie ze strukturą grupy. / IMPORTANT: After deployment to another server, update the return path to the Main module based on that group's structure. ---
-        window.location.href = '../Main/index.html';
+        window.location.href = 'index.html';
       });
 
       document.addEventListener('keydown', (event) => {

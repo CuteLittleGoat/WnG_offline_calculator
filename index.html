@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- Plik interfejsu modułu: struktura sekcji i elementy interaktywne / Module UI file: section structure and interactive elements -->
-<html lang="pl">
+<html lang="en">
 <!-- Sekcja konfiguracji dokumentu i zasobów / Document configuration and asset section -->
 <head>
   <meta charset="UTF-8">
@@ -102,73 +102,6 @@
       background: rgba(22, 198, 12, 0.22);
     }
 
-    .secretCtaWrap {
-      width: 100%;
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 4px;
-    }
-
-    .btn.secretCta {
-      width: auto;
-      border-color: #ff3b30;
-      background: rgba(255, 59, 48, 0.2);
-      color: #ffe5e3;
-      box-shadow: 0 0 14px rgba(255, 59, 48, 0.35);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 11px;
-      line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-    }
-
-    .btn.secretCta:hover {
-      box-shadow: 0 0 16px rgba(255, 59, 48, 0.45);
-      background: rgba(255, 59, 48, 0.28);
-    }
-
-    .btn.secretCta:active {
-      background: rgba(255, 59, 48, 0.36);
-    }
-
-    .secret-overlay {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-      padding: 20px;
-    }
-
-    .secret-overlay.is-open {
-      display: flex;
-    }
-
-    .secret-dialog {
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      background: #000;
-      box-shadow: var(--glow);
-      padding: 12px 12px 8px;
-      max-width: min(92vw, 640px);
-    }
-
-    .secret-dialog img {
-      display: block;
-      width: 100%;
-      max-height: 70vh;
-      object-fit: contain;
-      border-radius: 6px;
-    }
-
-    .secret-close {
-      margin: 10px 0 0 auto;
-      width: auto;
-    }
-
     .note {
       margin: 0;
       color: var(--text);
@@ -192,54 +125,17 @@
 
     <div class="actions">
       <div class="stack">
-        <a class="btn" href="KalkulatorXP.html">Kalkulator PD</a>
+        <a class="btn" href="XPCalculator.html">XP Calculator</a>
       </div>
       <div class="stack right">
-        <a class="btn" href="TworzeniePostaci.html">Tworzenie Postaci</a>
+        <a class="btn" href="CharacterCreation.html">Character Creation</a>
 
       </div>
-    </div>
-    <div class="secretCtaWrap">
-      <button class="btn secretCta" id="secretButton" type="button">Tajny przycisk!</button>
     </div>
   </main>
 
-  <div class="secret-overlay" id="secretOverlay" aria-hidden="true">
-    <div class="secret-dialog" role="dialog" aria-modal="true" aria-label="Tajny gif kozy">
-      <img src="Koza.gif" alt="Animowany gif kozy">
-      <button class="btn secretCta secret-close" id="secretCloseButton" type="button">Zamknij</button>
-    </div>
-  </div>
-
   <!-- Skrypt odpowiedzialny za interakcję strony / Script responsible for page interactions -->
 <script>
-    const secretButton = document.getElementById('secretButton');
-    const secretOverlay = document.getElementById('secretOverlay');
-    const secretCloseButton = document.getElementById('secretCloseButton');
-
-    function toggleSecretOverlay(forceOpen) {
-      const shouldOpen = typeof forceOpen === 'boolean'
-        ? forceOpen
-        : !secretOverlay.classList.contains('is-open');
-
-      secretOverlay.classList.toggle('is-open', shouldOpen);
-      secretOverlay.setAttribute('aria-hidden', String(!shouldOpen));
-    }
-
-    secretButton.addEventListener('click', () => toggleSecretOverlay());
-    secretCloseButton.addEventListener('click', () => toggleSecretOverlay(false));
-
-    secretOverlay.addEventListener('click', (event) => {
-      if (event.target === secretOverlay) {
-        toggleSecretOverlay(false);
-      }
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && secretOverlay.classList.contains('is-open')) {
-        toggleSecretOverlay(false);
-      }
-    });
   </script>
 </body>
 </html>
