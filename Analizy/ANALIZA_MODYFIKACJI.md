@@ -292,3 +292,33 @@ Po wdrożeniu Etapów 2–4 następujące pliki są kandydatami do usunięcia w 
 Wpływ na dokumentację:
 - Aktualizacja dokumentacji użytkowej i technicznej jest nadal wymagana w kolejnym etapie (EN-first + usunięcie nieaktualnych opisów Save/Load/Firebase/secret button).
 - W tym kroku zaktualizowano wyłącznie plik analityczny, zgodnie z zakresem etapu.
+
+### Etap 6 — porządki repo
+
+Usunięto potwierdzone zbędne pliki:
+- `config/firebase-config.js`
+- `config/FirebaseREADME.md`
+- `Koza.gif`
+- cały katalog `Old/`
+
+Weryfikacja po zmianach:
+- brak aktywnych odwołań do Firebase,
+- brak aktywnych odwołań do `Koza.gif`,
+- aplikacja korzysta tylko z aktualnych plików runtime.
+
+### Etap 7 — dokumentacja po wdrożeniu
+
+Zaktualizowano dokumentację zgodnie ze stanem po wdrożeniu:
+- `docs/README.md`:
+  - usunięto odniesienia do Firebase, Save/Load i secret button,
+  - ułożono dokument w kolejności EN-first, PL-second,
+  - opisano aktualny, offline’owy przepływ użytkownika.
+- `docs/Documentation.md`:
+  - zastąpiono historyczne i nieaktualne treści spójnym opisem bieżącej architektury,
+  - usunięto odniesienia do Firebase oraz nieistniejących elementów UI,
+  - zaktualizowano strukturę plików po zmianach.
+- `README.md`:
+  - dodano główną instrukcję użytkownika (EN-first, PL-second) spójną z `docs/README.md`.
+
+Wpływ na dokumentację:
+- Dokumentacja została zaktualizowana i odzwierciedla obecny stan aplikacji offline.
