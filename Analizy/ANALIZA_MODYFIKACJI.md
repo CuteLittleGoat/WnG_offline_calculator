@@ -194,12 +194,32 @@ Na podstawie odpowiedzi użytkownika zakres prac został doprecyzowany następuj
 
 ---
 
-## 11) Dodatkowe pytanie do potwierdzenia przed implementacją
+## 11) Potwierdzenia i dodatkowe informacje od użytkownika (2026-05-26)
 
-Przed rozpoczęciem wdrożenia warto potwierdzić jedną decyzję techniczną dotyczącą nazw plików:
+Na podstawie najnowszej odpowiedzi użytkownika doprecyzowano:
 
-- Czy preferowaną nazwą jest **`XPCalculator.html`** (spójnie bez spacji),
-  czy inna forma EN, np. **`XP-Calculator.html`** lub **`xp-calculator.html`**?
+1. **Docelowa nazwa pliku kalkulatora XP**
+   - preferowana i zatwierdzona nazwa: **`XPCalculator.html`**.
 
-To pozwoli uniknąć późniejszego, zbędnego przemianowywania linków i odwołań.
+2. **Etapowanie prac (zaktualizowana kolejność)**
+   - **Etap 1** = przygotowanie analizy i planowanie dalszych prac;
+   - **Etap 2** = przygotowanie i inwentaryzacja (na tym etapie **bez kasowania plików**);
+   - **Etap 3** = UI i nazewnictwo EN-first;
+   - **Etap 4** = usunięcie wskazanych elementów UI;
+   - **Etap 5** = aktualizacja `Analizy/ANALIZA_MODYFIKACJI.md`:
+     - podsumowanie wykonanych prac,
+     - analiza, które pliki nie są już używane;
+   - **Etap 6** = porządki repo:
+     - usunięcie zbędnych elementów zgodnie z wcześniejszą inwentaryzacją,
+     - plik `Analizy/ANALIZA_MODYFIKACJI.md` **musi pozostać**;
+   - **Etap 7** = dokumentacja po wdrożeniu:
+     - bez opisywania pliku `Analizy/ANALIZA_MODYFIKACJI.md` w dokumentacji użytkowej.
 
+3. **Zakres bieżącego kroku**
+   - w bieżącym kroku aktualizujemy wyłącznie analizę;
+   - bez wdrażania zmian w kodzie aplikacji.
+
+## 12) Pytania otwarte do ewentualnego doprecyzowania (na przyszłość)
+
+Na ten moment, po otrzymanych wyjaśnieniach, **brak krytycznych pytań blokujących** dalsze etapy.
+Jeśli pojawi się potrzeba, dodatkowe pytania zostaną dopisane w tej sekcji przed wejściem w implementację.
