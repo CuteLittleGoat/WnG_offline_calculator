@@ -21,6 +21,7 @@ Główny cel dokumentu: umożliwić odtworzenie aplikacji **1:1** wyłącznie na
 │   ├── en.pdf
 │   └── pl.pdf
 └── docs/
+    ├── Adding_a_new_language_version.md
     ├── README.md
     └── Documentation.md
 ```
