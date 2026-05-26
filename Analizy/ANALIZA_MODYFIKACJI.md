@@ -124,3 +124,82 @@ Dodatkowo: po pełnym skanie kodu warto usunąć każdy plik stricte pomocniczy 
 4. Aktualizacja dokumentacji (EN first, bez Firebase).
 5. Test ręczny: otwarcie `index.html` i `KalkulatorXP.html` offline.
 6. Końcowy audit tekstów UI + grep kontrolny.
+
+---
+
+## 9) Ustalenia po doprecyzowaniu zakresu (2026-05-26)
+
+Na podstawie odpowiedzi użytkownika zakres prac został doprecyzowany następująco:
+
+1. **Modale i przyciski do usunięcia**
+   - usuwamy **modal związany z Save/Load** (jeżeli występuje w aktywnych plikach);
+   - usuwamy również modal powiązany z przyciskiem **"Tajny Przycisk!"** oraz sam przycisk **"Tajny Przycisk!"**;
+   - **zostaje** modal ostrzegający o skasowaniu danych przy zmianie języka (razem z ikoną).
+
+2. **Landing page (`index.html`) – tłumaczenie EN**
+   - landing page ma zostać przetłumaczony w uzgodnionym zakresie przycisków:
+     - `Kalkulator XP` → `XP Calculator`;
+     - `Tworzenie Postaci` → `Character Creation`.
+
+3. **Zmiana nazw plików HTML**
+   - pliki mają zostać przemianowane zgodnie z mapowaniem:
+     - `KalkulatorXP.html` → `XPCalculator.html` *(lub równoważna nazwa EN uzgodniona przy wdrożeniu)*;
+     - `TworzeniePostaci.html` → `CharacterCreation.html`.
+
+4. **Folder `Old/` i pliki zbędne**
+   - folder `Old/` oraz zbędne pliki (np. `Koza.gif`) są przewidziane do usunięcia,
+   - ale **na późniejszym etapie prac** (nie w tym kroku analitycznym).
+
+5. **Polityka językowa docelowo**
+   - aplikacja pozostaje **dwujęzyczna** (EN + PL),
+   - **EN ma być domyślny**,
+   - PL pozostaje językiem dodatkowym z myślą o dalszym rozszerzaniu i18n o kolejne języki.
+
+6. **Zakres bieżącego etapu**
+   - na tym etapie wykonujemy wyłącznie aktualizację analizy i planu,
+   - **bez wdrażania zmian w kodzie i dokumentacji użytkowej/technicznej**.
+
+---
+
+## 10) Zaktualizowany plan wdrożenia (bez implementacji na tym etapie)
+
+### Etap 1 — przygotowanie i inwentaryzacja
+1. Wykonać pełny skan aktywnych plików pod kątem:
+   - `Save`, `Load`, `secretOverlay`, `Tajny Przycisk`, `Koza`,
+   - referencji Firebase (`firebase`, `firestore`, `auth`, `storage`, `window.firebaseConfig`).
+2. Rozdzielić elementy do usunięcia „teraz” i „później” (np. `Old/`, `Koza.gif`).
+
+### Etap 2 — UI i nazewnictwo EN-first
+1. Ustawić EN jako domyślny język (`lang`, default `currentLanguage`, fallback).
+2. Przetłumaczyć uzgodnione etykiety landing page:
+   - `XP Calculator`,
+   - `Character Creation`.
+3. Zmienić nazwy plików HTML na EN i poprawić wszystkie linki nawigacyjne.
+
+### Etap 3 — usunięcie wskazanych elementów UI
+1. Usunąć przycisk **"Tajny Przycisk!"**.
+2. Usunąć modal i logikę powiązaną z tym przyciskiem.
+3. Usunąć modal Save/Load (jeśli istnieje w aktywnym kodzie).
+4. Zachować modal ostrzegający o utracie danych przy zmianie języka (z ikoną).
+
+### Etap 4 — porządki repo (zaplanowane na później)
+1. Usunąć `Old/` i inne zbędne pliki (np. `Koza.gif`) w dedykowanym kroku porządkowym.
+2. Zweryfikować, czy żaden aktywny plik nie odwołuje się do usuwanych zasobów.
+
+### Etap 5 — dokumentacja po wdrożeniu
+1. Zaktualizować `README.md` i ewentualne dokumenty w `docs/` tak, aby:
+   - EN był pierwszy,
+   - opis odpowiadał faktycznemu, offline’owemu stanowi aplikacji,
+   - nie było odniesień do nieistniejących już elementów UI.
+
+---
+
+## 11) Dodatkowe pytanie do potwierdzenia przed implementacją
+
+Przed rozpoczęciem wdrożenia warto potwierdzić jedną decyzję techniczną dotyczącą nazw plików:
+
+- Czy preferowaną nazwą jest **`XPCalculator.html`** (spójnie bez spacji),
+  czy inna forma EN, np. **`XP-Calculator.html`** lub **`xp-calculator.html`**?
+
+To pozwoli uniknąć późniejszego, zbędnego przemianowywania linków i odwołań.
+
