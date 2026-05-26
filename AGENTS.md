@@ -1,197 +1,341 @@
-# AGENTS.md — instrukcje dla agentów pracujących w repozytorium `WrathAndGlory`
+# AGENTS.md — instrukcje dla agentów pracujących w repozytorium `WnG_offline_calculator`
 
-Repozytorium `WrathAndGlory` jest zbiorem modułów, czyli osobnych aplikacji umieszczonych w oddzielnych folderach.
+Repozytorium `WnG_offline_calculator` zawiera uproszczoną, samodzielną i offline’ową wersję kalkulatora postaci do gry fabularnej **Wrath & Glory**.
 
-Moduł `Main` zawiera stronę główną służącą do uruchamiania pozostałych modułów.
+Repozytorium nie jest projektem wielomodułowym.
 
-Niektóre moduły mogą korzystać ze wspólnych źródeł danych, konfiguracji, usług zewnętrznych albo plików pomocniczych.
+Docelowo ma zawierać tylko jeden moduł:
 
-Przykład: moduły `DataVault` i `GeneratorNPC` mogą korzystać z tego samego źródła danych wskazanego w aktualnej konfiguracji projektu. Źródłem tym może być baza danych, usługa Firebase/Firestore, plik statyczny albo inne rozwiązanie używane w bieżącej wersji repozytorium.
+- `Calculator`
 
-Liczba modułów i sposób współdzielenia danych mogą się zmieniać. Przy każdej zmianie należy sprawdzić aktualną strukturę repozytorium oraz aktualne źródła danych, zamiast zakładać, że lista modułów lub sposób ładowania danych są stałe.
+Moduł ten jest oparty na module `Kalkulator` z większego repozytorium `WrathAndGlory`, ale w tym repozytorium ma działać jako prostsza, niezależna aplikacja.
 
----
+Głównym językiem użytkowym tego repozytorium jest **angielski**.
 
-## 1. Aktualizacja dokumentacji po zmianach w kodzie
+Oznacza to, że:
 
-Po każdej zmianie kodu któregokolwiek modułu należy zaktualizować dokumentację w odpowiednim folderze modułu:
-
-- `docs/Documentation.md`
-- `docs/README.md`
-
-Jeżeli moduł nie ma jeszcze tych plików, należy je utworzyć.
-
-Dokumentacja musi opisywać aktualny stan modułu po zmianach. Nie może opisywać nieaktualnego zachowania.
+- angielski ma być domyślnym językiem interfejsu;
+- angielska dokumentacja ma być umieszczana jako pierwsza;
+- angielska wersja instrukcji ma być kompletna sama w sobie;
+- polski może pozostać jako drugi język, jeżeli aplikacja i dokumentacja obsługują dwie wersje językowe.
 
 ---
 
-## 2. Zasady dla plików `README.md`
+## 1. Cel repozytorium
 
-Pliki `README.md` mają zawierać szczegółową instrukcję użytkownika.
+Celem repozytorium jest przygotowanie uproszczonego kalkulatora postaci do **Wrath & Glory**, który może działać lokalnie lub jako statyczna aplikacja webowa.
 
-Instrukcja ma być napisana dla osoby, która nie zna programowania. Należy unikać technicznego języka, jeżeli nie jest potrzebny do korzystania z modułu.
+Aplikacja powinna umożliwiać użytkownikowi korzystanie z kalkulatora bez konieczności logowania, łączenia się z bazą danych lub korzystania z usług chmurowych.
 
-`README.md` musi wyjaśniać:
+Repozytorium ma być prostsze od głównego repozytorium `WrathAndGlory`.
 
-- do czego służy dany moduł;
-- jak go uruchomić;
-- co i gdzie kliknąć;
-- co powinno się stać po kliknięciu każdego przycisku;
-- jak działa każda funkcja dostępna dla użytkownika;
-- jak działa każda ważna mechanika modułu;
-- co oznaczają komunikaty, pola, przełączniki i widoki;
-- jak użytkownik powinien postępować w typowych sytuacjach;
-- co zrobić, jeżeli pojawi się błąd lub pusty stan.
-
-Celem `README.md` jest to, aby dowolna osoba po przeczytaniu instrukcji była w stanie w pełni korzystać z danego modułu.
+Nie należy zakładać, że posiada ono tę samą strukturę, te same moduły, te same źródła danych albo te same integracje.
 
 ---
 
-## 3. Zasady dla plików `Documentation.md`
+## 2. Zakres repozytorium
 
-Pliki `Documentation.md` mają zawierać szczegółową dokumentację techniczną.
+Repozytorium powinno zawierać wyłącznie uproszczony kalkulator oraz pliki potrzebne do jego działania, stylowania, dokumentowania i utrzymania.
 
-Dokumentacja techniczna może używać języka technicznego. Jej odbiorcą jest programista lub agent odtwarzający aplikację.
+Nie należy przenosić do tego repozytorium innych modułów z większego repozytorium `WrathAndGlory`.
 
-`Documentation.md` musi zawierać informacje o:
+Nie należy dodawać funkcji, które należą do większego systemu modułowego, jeżeli użytkownik wyraźnie o to nie poprosi.
 
-- strukturze plików modułu;
-- stylach i layoutach;
-- użytych kolorach, fontach, odstępach i zasadach responsywności;
-- funkcjach JavaScript;
-- logice działania modułu;
-- sposobach obliczeń;
-- mechanikach interfejsu;
-- integracjach z Firebase;
-- strukturze danych;
-- zależnościach między plikami;
-- zależnościach między modułami;
-- skryptach pomocniczych, jeżeli występują;
-- skryptach Node.js lub innych skryptach odtwarzających strukturę danych, jeżeli dotyczą modułu;
-- procedurach odtworzenia modułu 1:1 w przypadku utraty plików.
-
-Dokumentacja techniczna może zawierać fragmenty kodu, ale każdy fragment powinien być opisany:
-
-- co robi;
-- gdzie jest używany;
-- dlaczego jest potrzebny.
-
-Celem `Documentation.md` jest to, aby dowolny programista mający do dyspozycji tylko ten plik był w stanie odtworzyć cały moduł.
+Przed każdą zmianą należy sprawdzić aktualną strukturę repozytorium i aktualny stan plików.
 
 ---
 
-## 4. Dokumentacja nie jest changelogiem
+## 3. Moduł aplikacji
 
-Pliki `README.md` i `Documentation.md` mają zawierać wyłącznie aktualne informacje.
+Jedynym docelowym modułem jest:
 
-Nie należy dopisywać historii zmian w stylu:
+```text
+Calculator
+```
 
-- „wcześniej działało to inaczej”;
-- „dodano nową funkcję”;
-- „zmieniono zachowanie”;
-- „stara wersja używała innego rozwiązania”.
+Dokładna struktura folderów może zmieniać się w trakcie pracy.
 
-Te pliki nie są changelogiem.
+Jeżeli pliki kalkulatora znajdują się bezpośrednio w katalogu głównym repozytorium, należy pracować z faktyczną strukturą zamiast automatycznie tworzyć nowy folder.
 
-Jeżeli informacja historyczna nie jest potrzebna do korzystania z modułu lub odtworzenia aktualnej wersji, należy ją pominąć.
+Nie należy zakładać istnienia innych modułów.
 
 ---
 
-## 5. Układ wersji językowych
+## 4. Domyślny język aplikacji
 
-Dokumenty użytkowe muszą być podzielone na dwie główne części językowe:
+Domyślnym językiem aplikacji ma być **angielski**.
 
-1. pełna wersja polska;
-2. pełna wersja angielska.
+Dotyczy to w szczególności:
 
-Nie wolno mieszać języków sekcja po sekcji.
+- tekstów widocznych w interfejsie;
+- etykiet pól;
+- przycisków;
+- nagłówków;
+- komunikatów walidacyjnych;
+- komunikatów błędów;
+- tekstów pomocy;
+- ustawień początkowych aplikacji.
 
-Przy każdej wersji językowej musi znajdować się emotka z flagą oznaczającą dany język.
+Jeżeli aplikacja ma przełącznik języka, domyślnie wybrany powinien być język angielski.
+
+Jeżeli aplikacja zapisuje preferencję językową użytkownika lokalnie, język angielski nadal powinien być językiem awaryjnym, gdy zapisana preferencja nie istnieje albo jest nieprawidłowa.
+
+Polska wersja językowa może istnieć jako druga wersja, ale nie może zastępować angielskiego jako języka domyślnego.
+
+---
+
+## 5. Wymóg działania offline
+
+Repozytorium ma zawierać wersję offline’ową.
+
+Nie należy dodawać integracji z:
+
+- Firebase;
+- Firestore;
+- Firebase Realtime Database;
+- Firebase Authentication;
+- Firebase Storage;
+- zewnętrzną bazą danych;
+- kontami użytkowników;
+- logowaniem;
+- chmurowym zapisem postaci.
+
+Aplikacja powinna działać jako statyczna aplikacja webowa zawsze wtedy, gdy jest to możliwe.
+
+Jeżeli potrzebne jest zapisywanie danych, należy preferować rozwiązania lokalne, takie jak:
+
+- `localStorage`;
+- eksport do pliku;
+- import z pliku;
+- kopiowanie danych jako tekst;
+- inne proste rozwiązania lokalne zaakceptowane przez użytkownika.
+
+---
+
+## 6. Przyciski Save i Load
+
+Ta wersja kalkulatora ma być pozbawiona integracji z Firebase.
+
+W związku z tym nie należy zachowywać przycisków ani funkcji powiązanych z chmurowym zapisem i odczytem, takich jak:
+
+- `Save`;
+- `Load`;
+- cloud save;
+- cloud load;
+- zapis do Firebase;
+- odczyt z Firebase;
+- logowanie użytkownika;
+- zapisywanie danych na koncie użytkownika.
+
+Jeżeli oryginalny moduł `Kalkulator` zawiera takie funkcje, podczas przenoszenia do tego repozytorium należy je usunąć albo zastąpić lokalnym rozwiązaniem, ale tylko wtedy, gdy użytkownik wyraźnie o to poprosi.
+
+Jeżeli w przyszłości zostanie dodany lokalny eksport/import, musi być jasno opisany jako funkcja lokalna, a nie jako zapis lub odczyt z chmury.
+
+---
+
+## 7. Dokumentacja
+
+Dokumentacja musi opisywać aktualny stan tego repozytorium, a nie stan większego repozytorium `WrathAndGlory`.
+
+Po każdej zmianie kodu należy sprawdzić, czy trzeba zaktualizować dokumentację.
+
+Zalecane pliki dokumentacji:
+
+```text
+README.md
+docs/README.md
+docs/Documentation.md
+```
+
+Jeżeli repozytorium nie używa folderu `docs/`, nie należy tworzyć zbędnej struktury dokumentacyjnej bez potrzeby lub bez polecenia użytkownika.
+
+Dokumentacja nie może opisywać funkcji, których w tej uproszczonej wersji nie ma, zwłaszcza:
+
+- Firebase;
+- logowania;
+- zapisu w chmurze;
+- odczytu z chmury;
+- innych modułów z większego repozytorium;
+- przycisków `Save` i `Load`, jeżeli zostały usunięte.
+
+---
+
+## 8. Układ wersji językowych w dokumentacji
+
+Dokumentacja użytkowa może być dwujęzyczna.
+
+Jeżeli dokument zawiera dwie wersje językowe, **angielski musi być pierwszy**, a polski drugi.
 
 Poprawny układ:
 
 ```markdown
-# 🇵🇱 Instrukcja dla użytkownika (PL)
+# 🇬🇧 User instructions (EN)
 
-Cała treść po polsku.
+Full English version.
+
+# 🇵🇱 Instrukcja użytkownika (PL)
+
+Pełna polska wersja.
+```
+
+Niepoprawny układ:
+
+```markdown
+# 🇵🇱 Instrukcja użytkownika (PL)
+
+Pełna polska wersja.
 
 # 🇬🇧 User instructions (EN)
 
 Full English version.
 ```
 
-Niepoprawny układ:
-
-```markdown
-# Sekcja 1 PL
-
-Treść po polsku.
-
-# Section 1 EN
-
-English text.
-
-# Sekcja 2 PL
-
-Treść po polsku.
-
-# Section 2 EN
-
-English text.
-```
-
----
-
-## 6. Zasady językowe
-
-Nie wolno mieszać języka polskiego i angielskiego w jednej sekcji, jeżeli dokument ma osobne wersje językowe.
-
-Wersja polska ma być kompletna sama w sobie.
+Nie należy mieszać języków sekcja po sekcji ani akapit po akapicie.
 
 Wersja angielska ma być kompletna sama w sobie.
 
-Nie należy tworzyć dokumentów, w których każdy akapit polski jest natychmiast tłumaczony pod spodem na angielski.
+Wersja polska, jeżeli istnieje, również ma być kompletna sama w sobie.
+
+Nie należy tworzyć dokumentów, w których każdy akapit angielski jest natychmiast tłumaczony pod spodem na polski.
 
 ---
 
-## 7. Komentarze w plikach kodu
+## 9. README.md
 
-Pliki kodu muszą zawierać dokładne komentarze w języku polskim i angielskim.
+`README.md` jest główną instrukcją użytkownika.
 
-Dotyczy to szczególnie plików:
+Powinien być napisany przede wszystkim po angielsku.
 
-- `*.html`
-- `*.js`
-- `*.css`
+Jeżeli zawiera wersję polską, powinna znajdować się po pełnej wersji angielskiej.
 
-Komentarze powinny wyjaśniać funkcję danego fragmentu kodu, a nie tylko powtarzać nazwę zmiennej.
+`README.md` powinien wyjaśniać:
 
-Przykład poprawnego komentarza:
+- do czego służy kalkulator;
+- jak go uruchomić;
+- co i gdzie kliknąć;
+- co robi każdy przycisk;
+- co oznacza każde ważne pole;
+- jak działa każda funkcja dostępna dla użytkownika;
+- jak interpretować komunikaty;
+- jak postępować w typowych sytuacjach;
+- co zrobić, jeżeli pojawi się błąd albo pusty stan;
+- jak działa lokalny import albo eksport, jeżeli taka funkcja istnieje.
 
-```js
-// --- Funkcja aktualizująca teksty w wybranym języku / Function to update texts in the selected language ---
-```
+Instrukcja użytkownika powinna być zrozumiała dla osoby, która nie zna programowania.
 
-Przykład poprawnego komentarza opisującego warunek:
-
-```js
-// Jeśli XP jest w normie, pokazujemy błąd "Drzewa Nauki" tylko wtedy, gdy zasada nie jest spełniona
-// If XP is valid, show the "Tree of Learning" error only when the rule is broken
-```
-
-Komentarze powinny być aktualizowane razem z kodem.
-
-Nie wolno zostawiać komentarzy opisujących stare lub nieistniejące zachowanie.
+Należy unikać technicznego języka, jeżeli nie jest potrzebny do korzystania z kalkulatora.
 
 ---
 
-## 8. Zmiany layoutu, fontów i kolorów
+## 10. Documentation.md
 
-Jeżeli zmiana dotyczy wyglądu aplikacji, należy zaktualizować plik:
+`Documentation.md`, jeżeli istnieje, jest dokumentacją techniczną.
 
-- `DetaleLayout.md`
+Może używać języka technicznego.
 
-Dotyczy to w szczególności zmian w:
+Jej odbiorcą jest programista albo agent AI, który ma zrozumieć lub odtworzyć aplikację.
+
+Dokumentacja techniczna powinna opisywać:
+
+- aktualną strukturę plików;
+- strukturę HTML;
+- style CSS;
+- layout;
+- responsywność;
+- użyte kolory, fonty i odstępy;
+- pliki JavaScript i ich odpowiedzialności;
+- logikę obliczeń;
+- struktury danych;
+- walidację;
+- obsługę języków;
+- lokalne zapisywanie danych, jeżeli istnieje;
+- lokalny import i eksport, jeżeli istnieje;
+- zależności;
+- sposób odtworzenia aplikacji z plików.
+
+Dokumentacja techniczna nie powinna opisywać Firebase ani innych funkcji usuniętych z tej uproszczonej wersji.
+
+---
+
+## 11. Dokumentacja nie jest changelogiem
+
+Pliki dokumentacji mają opisywać aktualny stan aplikacji.
+
+Nie należy dopisywać historii zmian w stylu:
+
+- „wcześniej aplikacja używała Firebase”;
+- „usunięto przycisk Save”;
+- „dawniej działało to inaczej”;
+- „w oryginalnym repozytorium ta funkcja była inna”.
+
+Takie informacje mogą znaleźć się w osobnej analizie migracyjnej, jeżeli użytkownik o nią poprosi, ale nie powinny znajdować się w zwykłej instrukcji użytkownika ani dokumentacji technicznej.
+
+---
+
+## 12. Migracja z większego repozytorium
+
+Podczas kopiowania kodu z większego repozytorium `WrathAndGlory` należy usuwać albo dostosowywać elementy, które nie pasują do uproszczonej wersji offline.
+
+Szczególną uwagę należy zwrócić na:
+
+- importy Firebase;
+- konfigurację Firebase;
+- logikę logowania;
+- zapis w chmurze;
+- odczyt z chmury;
+- przyciski `Save` i `Load`;
+- odwołania do innych modułów;
+- zależności od wspólnych danych większego repozytorium;
+- polski jako domyślny język interfejsu;
+- dokumentację opisującą większy projekt wielomodułowy.
+
+Nie należy bezrefleksyjnie kopiować dokumentacji z większego repozytorium.
+
+Każdy skopiowany plik musi zostać sprawdzony i dostosowany do faktycznego zakresu tego repozytorium.
+
+---
+
+## 13. Komentarze w kodzie
+
+Komentarze w kodzie powinny być jasne i aktualne.
+
+Ponieważ głównym językiem projektu jest angielski, nowe komentarze w kodzie powinny być pisane po angielsku.
+
+Polskie komentarze można pozostawić, jeżeli już istnieją i nadal są poprawne.
+
+Jeżeli modyfikowana jest sekcja kodu z polskim komentarzem, należy rozważyć przepisanie komentarza na jasny komentarz angielski.
+
+Komentarze powinny wyjaśniać działanie lub cel fragmentu kodu.
+
+Nie należy zostawiać komentarzy opisujących:
+
+- Firebase, jeżeli funkcja została usunięta;
+- przyciski `Save` i `Load`, jeżeli zostały usunięte;
+- inne moduły, których nie ma w tym repozytorium;
+- stare albo nieistniejące zachowanie.
+
+---
+
+## 14. Teksty interfejsu
+
+Teksty widoczne dla użytkownika powinny być domyślnie angielskie.
+
+Podczas zmiany etykiet, nagłówków, placeholderów, komunikatów, alertów, opisów i tooltipów należy:
+
+- najpierw zadbać o wersję angielską;
+- zachować spójne nazewnictwo w całej aplikacji;
+- aktualizować polskie tłumaczenia tylko wtedy, gdy aplikacja nadal obsługuje język polski;
+- upewnić się, że domyślnym językiem pozostaje angielski.
+
+Nie należy zostawiać polskiego jako domyślnego języka interfejsu, chyba że użytkownik wyraźnie zmieni to wymaganie.
+
+---
+
+## 15. Layout i wygląd
+
+Jeżeli zmiana dotyczy wyglądu aplikacji, należy sprawdzić, czy dokumentacja layoutu wymaga aktualizacji.
+
+Dotyczy to zmian w:
 
 - fontach;
 - kolorach;
@@ -208,199 +352,131 @@ Dotyczy to w szczególności zmian w:
 - wyglądzie formularzy;
 - wyglądzie komunikatów.
 
-`DetaleLayout.md` powinien opisywać aktualny wygląd aplikacji, a nie historię zmian.
-
----
-
-## 9. Analizy niezwiązane bezpośrednio ze zmianą kodu
-
-Jeżeli polecenie użytkownika nie dotyczy zmiany kodu, tylko analizy, należy zapisać wnioski w folderze:
-
-- `Analizy`
-
-Dla każdej analizy należy utworzyć nowy plik o nazwie adekwatnej do tematu analizy.
-
-Nazwa pliku powinna jasno wskazywać, czego dotyczy analiza.
-
-Przykład:
+Jeżeli istnieje plik opisujący layout, na przykład:
 
 ```text
-Analizy/audyt-datavault-parser-xlsx.md
+DetaleLayout.md
 ```
 
----
+albo jego angielski odpowiednik, należy zaktualizować go tak, aby opisywał aktualny wygląd aplikacji.
 
-## 10. Kontekst promptu w plikach analitycznych
-
-Jeżeli zapisywany jest plik z wynikami analizy, należy uwzględnić w nim pełen prompt użytkownika. Bez skracania.
-
-Celem jest zachowanie kontekstu odpowiedzi i umożliwienie zrozumienia, dlaczego dana analiza została wykonana.
-
-Plik analityczny powinien zawierać przynajmniej:
-
-- datę analizy;
-- temat analizy;
-- oryginalny pełny prompt użytkownika;
-- zakres analizy;
-- wnioski;
-- rekomendacje;
-- ewentualne ryzyka;
-- ewentualne następne kroki.
+Jeżeli taki plik nie istnieje, a zmiana wyglądu jest istotna, należy opisać najważniejsze informacje w dokumentacji technicznej, zamiast automatycznie tworzyć niepotrzebne nowe pliki.
 
 ---
 
-## 11. Folder `Analizy` a dokumentacja użytkowa i techniczna
+## 16. Dane i zasady obliczeń
 
-Folderu `Analizy` nie należy uwzględniać w dokumentacjach i instrukcjach modułów.
+Kalkulator może zawierać dane, tabele, koszty, opcje i zasady walidacji związane z systemem **Wrath & Glory**.
 
-Nie należy opisywać folderu `Analizy` w:
+Podczas zmiany logiki obliczeń lub danych należy:
 
-- `README.md`;
-- `Documentation.md`;
-- instrukcjach użytkownika;
-- dokumentacji odtworzeniowej modułów.
+- najpierw sprawdzić aktualną implementację;
+- nie upraszczać zasad bez polecenia użytkownika;
+- zachować istniejące działanie, jeżeli zadanie nie wymaga zmiany;
+- sprawdzić, czy komunikaty i wartości wyliczane nadal są zgodne z logiką;
+- zaktualizować dokumentację, jeżeli zmiana wpływa na działanie aplikacji.
 
-Wyjątek: można odwołać się do konkretnej analizy tylko wtedy, gdy użytkownik wyraźnie o to poprosi albo gdy analiza jest częścią wykonywanego zadania.
-
----
-
-## 12. Zmiany kodu wykonywane na podstawie pliku analitycznego
-
-Jeżeli polecenie użytkownika dotyczy zmiany kodu na podstawie pliku z analizą, po realizacji zadania należy zaktualizować ten plik analityczny.
-
-Do pliku należy dopisać sekcję opisującą wszystkie wykonane zmiany w kodzie.
-
-Sekcja musi zawierać:
-
-- nazwę zmienionego pliku;
-- numer linii lub możliwie dokładną lokalizację;
-- opis stanu przed zmianą;
-- opis stanu po zmianie.
-
-Format zapisu:
-
-````markdown
-## Zmiany wykonane w kodzie
-
-### Plik: `Second/app.js`
-
-Lokalizacja: linia 24
-
-Było:
-
-```js
-return false;
-```
-
-Jest:
-
-```js
-return true;
-```
-````
-
-Jeżeli numer linii nie jest stabilny albo nie można go jednoznacznie ustalić, należy podać najbliższą nazwę funkcji, selektora lub sekcji kodu.
+Jeżeli jakaś zasada jest niejasna, należy zaznaczyć niepewność zamiast wymyślać regułę.
 
 ---
 
-## 13. Ochrona danych wrażliwych
+## 17. Lokalne przechowywanie danych
+
+Ponieważ jest to wersja offline, przechowywanie danych powinno pozostać lokalne.
+
+Dozwolone rozwiązania obejmują:
+
+- dane tymczasowe w pamięci przeglądarki;
+- `localStorage`;
+- eksport postaci do pliku;
+- import postaci z pliku;
+- kopiowanie danych postaci jako tekst.
+
+Nie należy dodawać przechowywania danych po stronie serwera.
+
+Nie należy dodawać zapisu do Firebase.
+
+Nie należy dodawać przechowywania danych na koncie użytkownika.
+
+Jeżeli zostanie dodany lokalny import albo eksport, musi być jasno opisany jako funkcja lokalna.
+
+---
+
+## 18. Bezpieczeństwo i dane wrażliwe
 
 Nie wolno zapisywać w repozytorium danych wrażliwych.
 
 Dotyczy to między innymi:
 
+- kluczy API;
 - tokenów;
 - haseł;
 - prywatnych kluczy;
-- sekretów API;
-- `TRIGGER_TOKEN`;
+- sekretów;
+- prywatnych plików środowiskowych;
+- realnych danych użytkowników;
 - danych logowania;
-- prywatnych konfiguracji środowiskowych;
-- plików zawierających realne sekrety produkcyjne.
+- konfiguracji produkcyjnych.
 
-Jeżeli kod wymaga wartości sekretnej, należy użyć placeholdera i opisać, gdzie użytkownik ma samodzielnie uzupełnić wartość.
+To repozytorium nie powinno wymagać sekretów do normalnego działania.
 
-Przykład:
+Jeżeli plik skopiowany z innego repozytorium zawiera konfigurację Firebase, tokeny albo inne wrażliwe dane, należy je usunąć, chyba że użytkownik wyraźnie poleci inaczej.
 
-```env
-TRIGGER_TOKEN=TU_WSTAW_WLASNY_TOKEN
-```
-
-Jeżeli sekret został przypadkowo zapisany w repozytorium, należy go usunąć z aktualnej wersji plików i poinformować użytkownika, że taki sekret powinien zostać zrotowany.
+Jeżeli realny sekret został przypadkowo umieszczony w repozytorium, należy poinformować użytkownika, że powinien zostać zrotowany.
 
 ---
 
-## 14. Zasady pracy z repozytorium
+## 19. Zasady pracy z repozytorium
 
-Przed zmianami należy sprawdzić aktualny stan plików.
+Przed edycją plików należy:
 
-Nie należy zakładać, że wcześniejsza analiza nadal jest aktualna, jeżeli użytkownik poinformował, że ręcznie usunął foldery, przeniósł pliki albo wyczyścił część repozytorium.
+1. sprawdzić aktualną strukturę repozytorium;
+2. sprawdzić aktualną treść istotnych plików;
+3. ustalić, czy zmiana wpływa na dokumentację;
+4. ustalić, czy zmiana wpływa na domyślny język aplikacji;
+5. upewnić się, że zmiana nie przywraca Firebase ani logiki chmurowej;
+6. upewnić się, że zmiana nie przywraca przycisków `Save` i `Load` jako funkcji chmurowych.
 
 Nie należy commitować zmian bez wyraźnej prośby użytkownika.
 
-Jeżeli użytkownik prosi o przygotowanie treści pliku, należy podać treść w odpowiedzi albo zapisać plik lokalnie w rozmowie, zgodnie z poleceniem użytkownika.
+Jeżeli użytkownik prosi o przygotowanie treści pliku, należy podać kompletną treść w odpowiedzi albo przygotować lokalny artefakt w rozmowie, zgodnie z poleceniem użytkownika.
 
-Jeżeli użytkownik wyraźnie prosi o zapisanie pliku „tutaj”, nie należy tworzyć commita w repozytorium.
-
----
-
-## 15. Zasady bezpieczeństwa przy module `DataVault`
-
-Moduł `DataVault` jest szczególnie wrażliwy, ponieważ odpowiada za generowanie i przetwarzanie danych używanych przez inne moduły.
-
-Nie wolno upraszczać parserów, generatorów ani fallbacków bez sprawdzenia, czy wynik generowania danych pozostaje identyczny.
-
-Przed usunięciem lub zmianą logiki dotyczącej plików:
-
-- `DataVault/Repozytorium.xlsx`
-- `DataVault/data.json`
-- `DataVault/build_json.py`
-- `DataVault/xlsxCanonicalParser.js`
-- `firebase-import.json`
-
-należy porównać wynik generowania danych po wszystkich istotnych ścieżkach.
-
-Szczególnie ważne jest zachowanie zgodności między:
-
-- generowaniem przez `build_json.py`;
-- generowaniem przez aplikację w przeglądarce;
-- strukturą danych importowaną do Firebase.
+Jeżeli użytkownik prosi o „przygotowanie” pliku, nie oznacza to automatycznej zgody na commit do GitHuba.
 
 ---
 
-## 16. Priorytet aktualności nad historią
+## 20. Pliki AGENTS.md
 
-Wszystkie pliki instrukcji i dokumentacji mają opisywać aktualny stan repozytorium.
+Nie należy modyfikować plików `AGENTS.md`, chyba że użytkownik wyraźnie prosi o przygotowanie nowej treści albo zmianę takiego pliku.
 
-Jeżeli repozytorium zostało ręcznie uporządkowane, usunięto foldery albo przeniesiono sekrety, dokumentacja i instrukcje muszą odzwierciedlać nowy stan.
+Jeżeli użytkownik prosi o nową treść `AGENTS.md`, należy podać proponowaną treść jasno i kompletnie.
 
-Nie wolno zostawiać w dokumentacji informacji o plikach, folderach lub mechanikach, które już nie istnieją.
+Jeżeli użytkownik prosi o bezpośrednią aktualizację pliku w repozytorium, należy najpierw sprawdzić aktualną treść pliku, a następnie ostrożnie ją zastąpić.
 
-## 17. Foldery chronione przed edycją
+Nie należy tworzyć dodatkowych zagnieżdżonych plików `AGENTS.md`, chyba że użytkownik wyraźnie o to poprosi.
 
-Jeżeli w repozytorium istnieje lokalny plik `AGENTS.md`, jego instrukcje obowiązują dla folderu, w którym się znajduje, oraz dla wszystkich jego podfolderów.
+---
 
-Jeżeli lokalny `AGENTS.md` oznacza folder jako tylko do odczytu albo chroniony przed edycją, agent AI nie może modyfikować żadnych plików w tym folderze, nawet jeżeli ogólne zasady z głównego `AGENTS.md` nakazywałyby aktualizację dokumentacji, komentarzy, layoutu, analiz lub innych plików.
+## 21. Priorytety
 
-W takim przypadku lokalny zakaz edycji ma pierwszeństwo przed ogólnymi zasadami repozytorium.
+Podczas pracy z tym repozytorium należy stosować następującą kolejność priorytetów:
 
-Dotyczy to w szczególności folderu:
+1. Wyraźne polecenie użytkownika z bieżącej rozmowy.
+2. Ten plik `AGENTS.md`.
+3. Aktualna faktyczna struktura repozytorium.
+4. Aktualna dokumentacja, ale tylko jeżeli pasuje do faktycznego stanu repozytorium.
+5. Założenia z większego repozytorium `WrathAndGlory`, ale tylko wtedy, gdy zostały potwierdzone przez aktualne pliki albo przez użytkownika.
 
-- `WebView_FCM_Cloudflare_Worker/`
+Jeżeli istnieje konflikt między starą skopiowaną dokumentacją a uproszczonym zakresem tego repozytorium, pierwszeństwo ma uproszczony zakres tego repozytorium.
 
-## 18. Modyfikowanie plików AGENTS.md
+Docelowe założenie projektu:
 
-Agent AI nie może wykonywać żadnych zmian w plikach `AGENTS.md` znajdujących się w repozytorium.
-
-Zakaz obejmuje w szczególności:
-
-- edytowanie treści plików `AGENTS.md`;
-- poprawianie formatowania plików `AGENTS.md`;
-- zmianę numeracji, nagłówków, list lub interpunkcji;
-- przenoszenie plików `AGENTS.md` do innych lokalizacji;
-- zmianę nazw plików `AGENTS.md`;
-- usuwanie plików `AGENTS.md`;
-- tworzenie nowych plików `AGENTS.md`;
-- nadpisywanie plików `AGENTS.md`.
-
-Zakaz obowiązuje nawet wtedy, gdy inne instrukcje repozytorium nakazywałyby aktualizację dokumentacji, instrukcji lub plików konfiguracyjnych.
+```text
+jedno repozytorium
+jeden kalkulator
+angielski jako język domyślny
+dokumentacja: angielski pierwszy, polski drugi
+działanie offline
+brak Firebase
+brak chmurowych przycisków Save i Load
+```
