@@ -20,8 +20,6 @@ Główny cel dokumentu: umożliwić odtworzenie aplikacji **1:1** wyłącznie na
 ├── HowToUse/
 │   ├── en.pdf
 │   └── pl.pdf
-├── Analizy/
-│   └── ANALIZA_MODYFIKACJI.md
 └── docs/
     ├── README.md
     └── Documentation.md
