@@ -563,7 +563,7 @@ const translations = {
         }
       };
 
-      // --- Domyślny język (polski) / Default language (Polish) ---
+      // --- Domyślny język (angielski) / Default language (English) ---
       let currentLanguage = 'en';
 
       const maxAttributeRows = [
@@ -594,6 +594,8 @@ const translations = {
       function updateLanguage(lang) {
         currentLanguage = lang;
         const t = translations[lang];
+        const languageSelect = document.getElementById('languageSelect');
+        languageSelect.value = lang;
         document.getElementById('pageTitle').innerText = t.labels.pageTitle;
         document.getElementById('xpPoolLabel').innerText = t.labels.xpPool;
         document.getElementById('xpRemainingLabel').innerHTML = `${t.labels.remainingXP} <strong id="xpRemaining">155</strong>`;
