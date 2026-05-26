@@ -930,8 +930,7 @@ const translations = {
         const t = translations[currentLanguage];
         const confirmed = await showConfirmationModal({
           title: t.labels.pageTitle,
-          message: t.errors.languageChangeWarning,
-          imageUrl: modalImageUrl
+          message: t.errors.languageChangeWarning
         });
         if (confirmed) {
           updateLanguage(newLang);
