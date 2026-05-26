@@ -252,8 +252,8 @@
     <!-- Przełącznik języka w prawym górnym rogu / Language switcher in the top right corner -->
     <div class="language-switcher">
       <select id="languageSelect">
-        <option value="pl">Polski</option>
         <option value="en">English</option>
+        <option value="pl">Polski</option>
       </select>
       <button type="button" id="manualButton">Instrukcja</button>
       <button type="button" id="backToMainButton">Strona Główna</button>
@@ -563,7 +563,7 @@ const translations = {
         }
       };
 
-      // --- Domyślny język (polski) / Default language (Polish) ---
+      // --- Domyślny język (angielski) / Default language (English) ---
       let currentLanguage = 'en';
 
       const maxAttributeRows = [
@@ -594,6 +594,8 @@ const translations = {
       function updateLanguage(lang) {
         currentLanguage = lang;
         const t = translations[lang];
+        const languageSelect = document.getElementById('languageSelect');
+        languageSelect.value = lang;
         document.getElementById('pageTitle').innerText = t.labels.pageTitle;
         document.getElementById('xpPoolLabel').innerText = t.labels.xpPool;
         document.getElementById('xpRemainingLabel').innerHTML = `${t.labels.remainingXP} <strong id="xpRemaining">155</strong>`;
@@ -928,8 +930,7 @@ const translations = {
         const t = translations[currentLanguage];
         const confirmed = await showConfirmationModal({
           title: t.labels.pageTitle,
-          message: t.errors.languageChangeWarning,
-          imageUrl: modalImageUrl
+          message: t.errors.languageChangeWarning
         });
         if (confirmed) {
           updateLanguage(newLang);
