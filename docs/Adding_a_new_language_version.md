@@ -1,44 +1,54 @@
-# How to add a new language version and set it as default
+# How to add a new language version and set it as default (EN)
 
-This guide is written **step by step for a person without programming experience**.
+This guide explains how to add another interface language to `WnG_offline_calculator` and optionally make it the default language.
 
-You will learn how to:
-1. Add a new language (for example `de` for German).
-2. Fill in all required translations (all labels and other text fields).
-3. Set this language as default in:
-   - `XPCalculator.html`
-   - `CharacterCreation.html`
-   - `index.html`
+The repository is offline/static. It has no Firebase integration and no save/load feature. Adding a language does not require Firebase or any backend setup.
 
 ---
 
-## 1) Before you start – important rule
+## 1. Important rule
 
-In this project there are no separate translation files. Text is stored directly in HTML files, inside the JavaScript section `const translations = { ... }`.
+There are no separate translation files in this project.
 
-That means when adding a language you must:
-- add a new option in the language selector (`<option value="...">`),
-- add a new translation section in `translations`,
-- set the new language code as default (`let currentLanguage = '...'`),
-- and (in `index.html`) manually replace fixed texts, because there is no `translations` object there.
+Interface text is stored directly in HTML files, mostly inside JavaScript objects named:
+
+```js
+const translations = { ... }
+```
+
+This means adding a new language requires editing HTML files directly.
+
+You usually need to update:
+
+- `XPCalculator.html`,
+- `CharacterCreation.html`,
+- `index.html` if it contains static visible text,
+- documentation files if the new language should be documented.
 
 ---
 
-## 2) Choose language code and name
+## 2. Choose a language code
 
-Example for German:
-- language code: `de`
-- name shown in selector: `Deutsch`
+Choose a short language code and use it consistently everywhere.
 
-You can use another code (for example `fr`, `es`, `it`) — but the same code must match **everywhere**.
+Examples:
+
+| Language | Suggested code | Selector label |
+| --- | --- | --- |
+| German | `de` | `Deutsch` |
+| French | `fr` | `Français` |
+| Spanish | `es` | `Español` |
+| Italian | `it` | `Italiano` |
+
+The examples below use German (`de`). Replace `de` with your own language code if needed.
 
 ---
 
-## 3) XPCalculator.html – add the new language
+## 3. Update `XPCalculator.html`
 
-### Step 3.1: Add a new option in the language list
+### 3.1 Add a language option
 
-Find:
+Find the language selector:
 
 ```html
 <select id="languageSelect" aria-label="Language version">
@@ -47,25 +57,23 @@ Find:
 </select>
 ```
 
-Add a new line (example for `de`):
+Add a new option:
 
 ```html
 <option value="de">Deutsch</option>
 ```
 
-After change:
+Expected result:
 
 ```html
 <select id="languageSelect" aria-label="Language version">
   <option value="en">English</option>
   <option value="pl">Polski</option>
-  <option value="de">Deutsch</option> <!-- ADD NEW LANGUAGE HERE -->
+  <option value="de">Deutsch</option>
 </select>
 ```
 
----
-
-### Step 3.2: Add a new block in `translations`
+### 3.2 Add a translation block
 
 Find:
 
@@ -76,91 +84,57 @@ const translations = {
 };
 ```
 
-Add a third block, for example `de: { ... }`.
-
-The easiest way: copy the whole `en` block, paste it below, then change:
-- `en:` to `de:`
-- all texts to your target language.
-
-#### What MUST be translated in XPCalculator (`labels`)
-
-In the new language, fill all keys:
-
-- `languageSelect`
-- `pageTitle`
-- `mainPageButton`
-- `resetButton`
-- `resetTitle`
-- `instructionsTitle`
-- `hintLine1`
-- `hintLine2`
-- `hintLine3`
-- `totalLabel`
-- `tabsTitle`
-- `attributesTitle`
-- `skillsTitle`
-- `currentHeader`
-- `targetHeader`
-- `costHeader`
-- `maxAttributesTitle`
-
-#### What else MUST be translated
-
-Besides `labels`, also fill:
-- `races` (`race_1` ... `race_10`)
-- `attributes` (`attribute_1` ... `attribute_8`)
-
-Template to paste (keep the same structure):
+Copy the complete `en` block, paste it as a new block, and rename it:
 
 ```js
-de: {
-  labels: {
-    languageSelect: "Language version",
-    pageTitle: "XP Calculator",
-    mainPageButton: "Main Page",
-    resetButton: "Reset values",
-    resetTitle: "Set all fields to 0",
-    instructionsTitle: "INSTRUCTIONS",
-    hintLine1: "▸ Enter the current and target value for each entry.",
-    hintLine2: "▸ The XP total updates automatically as you change values.",
-    hintLine3: "▸ The <b>Reset values</b> button clears all fields.",
-    totalLabel: "Total XP cost",
-    tabsTitle: "XP calculations",
-    attributesTitle: "Attributes",
-    skillsTitle: "Skills",
-    currentHeader: "Current value",
-    targetHeader: "Target value",
-    costHeader: "XP cost",
-    maxAttributesTitle: "Maximum attribute values"
-  },
-  races: {
-    race_1: "...",
-    race_2: "...",
-    race_3: "...",
-    race_4: "...",
-    race_5: "...",
-    race_6: "...",
-    race_7: "...",
-    race_8: "...",
-    race_9: "...",
-    race_10: "..."
-  },
-  attributes: {
-    attribute_1: "...",
-    attribute_2: "...",
-    attribute_3: "...",
-    attribute_4: "...",
-    attribute_5: "...",
-    attribute_6: "...",
-    attribute_7: "...",
-    attribute_8: "..."
-  }
-}
+de: { ... }
 ```
 
----
+Translate every visible value inside the new block.
 
-### Step 3.3: Set new language as default
+### 3.3 Required `labels` keys
+
+The new language block must include all label keys used by the page.
+
+Typical required keys include:
+
+```text
+languageSelect
+pageTitle
+mainPageButton
+resetButton
+resetTitle
+instructionsTitle
+hintLine1
+hintLine2
+hintLine3
+totalLabel
+tabsTitle
+attributesTitle
+skillsTitle
+currentHeader
+targetHeader
+costHeader
+maxAttributesTitle
+```
+
+### 3.4 Required reference data labels
+
+Also translate reference labels such as:
+
+```text
+races
+attributes
+```
+
+Typical keys:
+
+```text
+race_1 ... race_10
+attribute_1 ... attribute_8
+```
+
+### 3.5 Set default language in `XPCalculator.html`
 
 Find:
 
@@ -168,21 +142,21 @@ Find:
 let currentLanguage = "en";
 ```
 
-Change to (German example):
+Change it to:
 
 ```js
-let currentLanguage = "de"; // SET DEFAULT LANGUAGE HERE
+let currentLanguage = "de";
 ```
 
-That is all for `XPCalculator.html`.
+Use this only if the new language should be the startup default.
 
 ---
 
-## 4) CharacterCreation.html – add the new language
+## 4. Update `CharacterCreation.html`
 
-### Step 4.1: Add language option in `<select>`
+### 4.1 Add a language option
 
-Find:
+Find the language selector:
 
 ```html
 <select id="languageSelect">
@@ -197,9 +171,7 @@ Add:
 <option value="de">Deutsch</option>
 ```
 
----
-
-### Step 4.2: Add new block in `translations`
+### 4.2 Add a translation block
 
 Find:
 
@@ -210,131 +182,224 @@ const translations = {
 };
 ```
 
-Copy `en` and create a new `de` block.
+Copy the complete `en` block, paste it as a new block, rename it to `de`, and translate every visible value.
 
-Complete all required labels/texts used by the page in that block, then translate any additional arrays/objects if present.
+### 4.3 Translate all groups used by the sheet
 
----
+Character Creation usually has more text than the XP Calculator.
 
-### Step 4.3: Set default language
+Check and translate every group present in the actual file, for example:
 
-Find:
+```text
+labels
+errors
+attributes
+skills
+races
+species
+modal texts
+button labels
+manual/help labels
+```
+
+The exact structure must match the current `CharacterCreation.html` implementation.
+
+### 4.4 Set default language in `CharacterCreation.html`
+
+Find one of these depending on the current file style:
 
 ```js
 let currentLanguage = "en";
 ```
 
-Change to:
+or:
+
+```js
+let currentLanguage = 'en';
+```
+
+Change it to:
 
 ```js
 let currentLanguage = "de";
 ```
 
----
+or:
 
-## 5) index.html – add language manually
+```js
+let currentLanguage = 'de';
+```
 
-`index.html` does not use `translations`.
-
-So you need to:
-1. Find visible static texts (titles, buttons, section names, descriptions).
-2. Replace them manually with your target language.
-3. If there is a language selector on this page, add the new option there too.
+Keep the quote style consistent with the file.
 
 ---
 
-## 6) Final checklist
+## 5. Update `index.html`
 
-Before saving, verify:
-- New language option was added in all required `<select>` elements.
-- New language block was added in each `translations` object.
-- All mandatory keys are translated (no missing label).
-- `currentLanguage` is set to your new language code where needed.
-- `index.html` fixed texts were translated manually.
+`index.html` may not use a full translation dictionary.
 
----
+If it contains static visible text, update it manually:
 
-## 7) Quick test
+- page title,
+- button labels,
+- descriptions,
+- tooltips,
+- alt text if needed.
 
-1. Open the project in browser.
-2. Go to `XPCalculator.html` and `CharacterCreation.html`.
-3. Check if selector shows new language.
-4. Check if all headers/buttons/messages are translated.
-5. Refresh page and ensure new language is default.
-6. Open `index.html` and verify translated static text.
-
-If anything appears in old language, it usually means one key was skipped in `translations` or a static text was not replaced.
+If a language selector is later added to `index.html`, it must follow the same language code as the calculator pages.
 
 ---
 
-# Jak dodać nową wersję językową i ustawić ją jako domyślną
+## 6. Add a manual PDF if needed
 
-Ten poradnik jest napisany **krok po kroku dla osoby bez doświadczenia programistycznego**.
+Manual PDFs are stored in:
 
-Dowiesz się, jak:
-1. Dodać nowy język (np. `de` dla niemieckiego).
-2. Uzupełnić wszystkie wymagane tłumaczenia (wszystkie „labels” i inne pola tekstowe).
-3. Ustawić ten język jako domyślny w:
-   - `XPCalculator.html`
-   - `CharacterCreation.html`
-   - `index.html`
+```text
+HowToUse/
+```
 
----
+Current files:
 
-## 1) Zanim zaczniesz – ważna zasada
+```text
+HowToUse/en.pdf
+HowToUse/pl.pdf
+```
 
-W tym projekcie nie ma osobnych plików tłumaczeń. Teksty są zapisane bezpośrednio w plikach HTML, wewnątrz sekcji JavaScript `const translations = { ... }`.
+If the new language should have its own manual, add a file such as:
 
-To oznacza, że przy dodawaniu języka musisz:
-- dodać nową opcję na liście wyboru języka (`<option value="...">`),
-- dodać nową sekcję tłumaczeń w `translations`,
-- ustawić nowy kod języka jako domyślny (`let currentLanguage = '...'`),
-- oraz (w `index.html`) ręcznie podmienić stałe napisy, bo tam nie ma `translations`.
+```text
+HowToUse/de.pdf
+```
 
----
+Then update the manual-opening logic in `CharacterCreation.html` so it chooses the new file for the new language.
 
-## 2) Wybierz kod i nazwę języka
-
-Przykład dla niemieckiego:
-- kod języka: `de`
-- nazwa widoczna na liście: `Deutsch`
-
-Możesz użyć innego kodu (np. `fr`, `es`, `it`) – ale ten sam kod musi się zgadzać **wszędzie**.
+If no translated manual is available, decide whether the new language should fall back to `en.pdf`.
 
 ---
 
-## 3) XPCalculator.html – dodanie nowego języka
+## 7. Do not add Firebase
 
-### Krok 3.1: Dodaj nową opcję na liście języków
+This repository is the offline calculator.
 
-Znajdź:
+Adding a language does not require:
+
+- Firebase Authentication,
+- Cloud Firestore,
+- Realtime Database,
+- Firebase Storage,
+- save/load code.
+
+Do not add Firebase documentation or config files unless the project scope changes intentionally.
+
+---
+
+## 8. Final checklist
+
+Before committing changes, verify:
+
+- new language option exists in every required selector,
+- new language block exists in every required `translations` object,
+- all required keys are present,
+- no labels remain accidentally in the old language,
+- default language is set only where intended,
+- manual PDF behavior is correct,
+- `index.html` static text is updated if needed,
+- app still works offline,
+- no save/load or Firebase requirement was introduced accidentally.
+
+---
+
+## 9. Quick test
+
+1. Open `index.html`.
+2. Open `XPCalculator.html`.
+3. Select the new language.
+4. Confirm all labels, headers, buttons, and reference table text update.
+5. Refresh and confirm the default language if you changed it.
+6. Open `CharacterCreation.html`.
+7. Select the new language.
+8. Confirm all labels, buttons, warnings, modals, and reference table text update.
+9. Click **Instruction / Manual** and confirm expected PDF behavior.
+10. Disconnect network and confirm the calculator still works locally.
+
+---
+
+# Jak dodać nową wersję językową i ustawić ją jako domyślną (PL)
+
+Ten poradnik wyjaśnia, jak dodać kolejny język interfejsu do `WnG_offline_calculator` i opcjonalnie ustawić go jako język domyślny.
+
+Repozytorium jest offline/statyczne. Nie ma integracji z Firebase ani funkcji save/load. Dodanie języka nie wymaga Firebase ani żadnego backendu.
+
+---
+
+## 1. Ważna zasada
+
+W tym projekcie nie ma osobnych plików tłumaczeń.
+
+Teksty interfejsu są zapisane bezpośrednio w plikach HTML, najczęściej w obiektach JavaScript o nazwie:
+
+```js
+const translations = { ... }
+```
+
+To oznacza, że dodanie nowego języka wymaga bezpośredniej edycji plików HTML.
+
+Zwykle trzeba zaktualizować:
+
+- `XPCalculator.html`,
+- `CharacterCreation.html`,
+- `index.html`, jeśli zawiera statyczne widoczne teksty,
+- pliki dokumentacji, jeśli nowy język ma być opisany.
+
+---
+
+## 2. Wybierz kod języka
+
+Wybierz krótki kod języka i używaj go konsekwentnie wszędzie.
+
+Przykłady:
+
+| Język | Sugerowany kod | Etykieta w selektorze |
+| --- | --- | --- |
+| niemiecki | `de` | `Deutsch` |
+| francuski | `fr` | `Français` |
+| hiszpański | `es` | `Español` |
+| włoski | `it` | `Italiano` |
+
+Przykłady poniżej używają niemieckiego (`de`). Jeśli dodajesz inny język, zastąp `de` własnym kodem.
+
+---
+
+## 3. Zaktualizuj `XPCalculator.html`
+
+### 3.1 Dodaj opcję języka
+
+Znajdź selektor języka:
 
 ```html
-<select id="languageSelect" aria-label="Wersja językowa">
+<select id="languageSelect" aria-label="Language version">
   <option value="en">English</option>
   <option value="pl">Polski</option>
 </select>
 ```
 
-Dodaj nową linię (przykład dla `de`):
+Dodaj nową opcję:
 
 ```html
 <option value="de">Deutsch</option>
 ```
 
-Po zmianie:
+Oczekiwany wynik:
 
 ```html
-<select id="languageSelect" aria-label="Wersja językowa">
+<select id="languageSelect" aria-label="Language version">
   <option value="en">English</option>
   <option value="pl">Polski</option>
-  <option value="de">Deutsch</option> <!-- TUTAJ DODAJESZ NOWY JĘZYK -->
+  <option value="de">Deutsch</option>
 </select>
 ```
 
----
-
-### Krok 3.2: Dodaj nowy blok w `translations`
+### 3.2 Dodaj blok tłumaczeń
 
 Znajdź:
 
@@ -345,91 +410,57 @@ const translations = {
 };
 ```
 
-Dodaj trzeci blok, np. `de: { ... }`.
-
-Najprościej: skopiuj cały blok `en`, wklej pod nim i zmień:
-- `en:` na `de:`
-- wszystkie teksty na docelowy język.
-
-#### Co MUSI być przetłumaczone w XPCalculator (`labels`)
-
-W nowym języku obowiązkowo uzupełnij wszystkie klucze:
-
-- `languageSelect`
-- `pageTitle`
-- `mainPageButton`
-- `resetButton`
-- `resetTitle`
-- `instructionsTitle`
-- `hintLine1`
-- `hintLine2`
-- `hintLine3`
-- `totalLabel`
-- `tabsTitle`
-- `attributesTitle`
-- `skillsTitle`
-- `currentHeader`
-- `targetHeader`
-- `costHeader`
-- `maxAttributesTitle`
-
-#### Co jeszcze MUSI być przetłumaczone
-
-Poza `labels` musisz też uzupełnić:
-- `races` (`race_1` ... `race_10`)
-- `attributes` (`attribute_1` ... `attribute_8`)
-
-Szablon do wklejenia (zostaw identyczną strukturę):
+Skopiuj cały blok `en`, wklej go jako nowy blok i zmień nazwę na:
 
 ```js
-de: {
-  labels: {
-    languageSelect: "Language version",
-    pageTitle: "XP Calculator",
-    mainPageButton: "Main Page",
-    resetButton: "Reset values",
-    resetTitle: "Set all fields to 0",
-    instructionsTitle: "INSTRUCTIONS",
-    hintLine1: "▸ Enter the current and target value for each entry.",
-    hintLine2: "▸ The XP total updates automatically as you change values.",
-    hintLine3: "▸ The <b>Reset values</b> button clears all fields.",
-    totalLabel: "Total XP cost",
-    tabsTitle: "XP calculations",
-    attributesTitle: "Attributes",
-    skillsTitle: "Skills",
-    currentHeader: "Current value",
-    targetHeader: "Target value",
-    costHeader: "XP cost",
-    maxAttributesTitle: "Maximum attribute values"
-  },
-  races: {
-    race_1: "...",
-    race_2: "...",
-    race_3: "...",
-    race_4: "...",
-    race_5: "...",
-    race_6: "...",
-    race_7: "...",
-    race_8: "...",
-    race_9: "...",
-    race_10: "..."
-  },
-  attributes: {
-    attribute_1: "...",
-    attribute_2: "...",
-    attribute_3: "...",
-    attribute_4: "...",
-    attribute_5: "...",
-    attribute_6: "...",
-    attribute_7: "...",
-    attribute_8: "..."
-  }
-}
+de: { ... }
 ```
 
----
+Przetłumacz każdą widoczną wartość w nowym bloku.
 
-### Krok 3.3: Ustaw nowy język jako domyślny
+### 3.3 Wymagane klucze `labels`
+
+Nowy blok języka musi zawierać wszystkie klucze etykiet używane przez stronę.
+
+Typowe wymagane klucze:
+
+```text
+languageSelect
+pageTitle
+mainPageButton
+resetButton
+resetTitle
+instructionsTitle
+hintLine1
+hintLine2
+hintLine3
+totalLabel
+tabsTitle
+attributesTitle
+skillsTitle
+currentHeader
+targetHeader
+costHeader
+maxAttributesTitle
+```
+
+### 3.4 Wymagane etykiety danych referencyjnych
+
+Przetłumacz też etykiety referencyjne, takie jak:
+
+```text
+races
+attributes
+```
+
+Typowe klucze:
+
+```text
+race_1 ... race_10
+attribute_1 ... attribute_8
+```
+
+### 3.5 Ustaw język domyślny w `XPCalculator.html`
 
 Znajdź:
 
@@ -437,21 +468,21 @@ Znajdź:
 let currentLanguage = "en";
 ```
 
-Zmień na (przykład dla niemieckiego):
+Zmień na:
 
 ```js
-let currentLanguage = "de"; // TUTAJ USTAWIASZ DOMYŚLNY JĘZYK
+let currentLanguage = "de";
 ```
 
-To wszystko dla `XPCalculator.html`.
+Zrób to tylko wtedy, gdy nowy język ma być językiem startowym.
 
 ---
 
-## 4) CharacterCreation.html – dodanie nowego języka
+## 4. Zaktualizuj `CharacterCreation.html`
 
-### Krok 4.1: Dodaj opcję języka w `<select>`
+### 4.1 Dodaj opcję języka
 
-Znajdź:
+Znajdź selektor języka:
 
 ```html
 <select id="languageSelect">
@@ -466,9 +497,7 @@ Dodaj:
 <option value="de">Deutsch</option>
 ```
 
----
-
-### Krok 4.2: Dodaj nowy blok w `translations`
+### 4.2 Dodaj blok tłumaczeń
 
 Znajdź:
 
@@ -479,18 +508,40 @@ const translations = {
 };
 ```
 
-Skopiuj `en` i utwórz nowy blok `de`.
+Skopiuj cały blok `en`, wklej go jako nowy blok, zmień nazwę na `de` i przetłumacz każdą widoczną wartość.
 
-Uzupełnij wszystkie wymagane etykiety/teksty używane przez stronę w tym bloku, a następnie przetłumacz dodatkowe tablice/obiekty, jeśli występują.
+### 4.3 Przetłumacz wszystkie grupy używane przez arkusz
 
----
+Character Creation zwykle ma więcej tekstów niż XP Calculator.
 
-### Krok 4.3: Ustaw domyślny język
+Sprawdź i przetłumacz wszystkie grupy obecne w aktualnym pliku, na przykład:
 
-Znajdź:
+```text
+labels
+errors
+attributes
+skills
+races
+species
+teksty modali
+etykiety przycisków
+etykiety instrukcji/pomocy
+```
+
+Dokładna struktura musi odpowiadać aktualnej implementacji w `CharacterCreation.html`.
+
+### 4.4 Ustaw język domyślny w `CharacterCreation.html`
+
+Znajdź jedną z tych wersji, zależnie od stylu aktualnego pliku:
 
 ```js
 let currentLanguage = "en";
+```
+
+albo:
+
+```js
+let currentLanguage = 'en';
 ```
 
 Zmień na:
@@ -499,37 +550,100 @@ Zmień na:
 let currentLanguage = "de";
 ```
 
----
+albo:
 
-## 5) index.html – dodanie języka ręcznie
+```js
+let currentLanguage = 'de';
+```
 
-`index.html` nie korzysta z `translations`.
-
-Dlatego trzeba:
-1. Znaleźć widoczne, stałe napisy (tytuły, przyciski, nazwy sekcji, opisy).
-2. Ręcznie podmienić je na docelowy język.
-3. Jeśli na stronie jest wybór języka, dodać tam nową opcję.
+Zachowaj styl cudzysłowów używany w pliku.
 
 ---
 
-## 6) Lista kontrolna
+## 5. Zaktualizuj `index.html`
 
-Przed zapisaniem sprawdź:
-- Nowa opcja językowa została dodana we wszystkich wymaganych `<select>`.
-- Nowy blok języka został dodany w każdym obiekcie `translations`.
-- Wszystkie obowiązkowe klucze są przetłumaczone (brakujących etykiet).
-- `currentLanguage` ustawiono na nowy kod języka tam, gdzie trzeba.
-- Stałe teksty w `index.html` zostały przetłumaczone ręcznie.
+`index.html` może nie korzystać z pełnego słownika tłumaczeń.
+
+Jeśli zawiera statyczne widoczne teksty, zaktualizuj je ręcznie:
+
+- tytuł strony,
+- etykiety przycisków,
+- opisy,
+- tooltipy,
+- tekst alternatywny, jeśli jest potrzebny.
+
+Jeśli w przyszłości do `index.html` zostanie dodany selektor języka, musi używać tego samego kodu języka co strony kalkulatorów.
 
 ---
 
-## 7) Szybki test
+## 6. Dodaj PDF instrukcji, jeśli jest potrzebny
 
-1. Otwórz projekt w przeglądarce.
-2. Wejdź na `XPCalculator.html` i `CharacterCreation.html`.
-3. Sprawdź, czy w selektorze pojawia się nowy język.
-4. Sprawdź, czy wszystkie nagłówki/przyciski/komunikaty są przetłumaczone.
-5. Odśwież stronę i upewnij się, że nowy język jest domyślny.
-6. Otwórz `index.html` i zweryfikuj przetłumaczone stałe napisy.
+Instrukcje PDF znajdują się w:
 
-Jeśli coś wyświetla się w starym języku, zwykle oznacza to pominięty klucz w `translations` albo niepodmieniony tekst stały.
+```text
+HowToUse/
+```
+
+Aktualne pliki:
+
+```text
+HowToUse/en.pdf
+HowToUse/pl.pdf
+```
+
+Jeśli nowy język ma mieć własną instrukcję, dodaj plik, na przykład:
+
+```text
+HowToUse/de.pdf
+```
+
+Następnie zaktualizuj logikę otwierania instrukcji w `CharacterCreation.html`, aby dla nowego języka wybierała nowy plik.
+
+Jeśli nie ma przetłumaczonej instrukcji, zdecyduj, czy nowy język ma używać fallbacku do `en.pdf`.
+
+---
+
+## 7. Nie dodawaj Firebase
+
+To repozytorium jest kalkulatorem offline.
+
+Dodanie języka nie wymaga:
+
+- Firebase Authentication,
+- Cloud Firestore,
+- Realtime Database,
+- Firebase Storage,
+- kodu save/load.
+
+Nie dodawaj dokumentacji Firebase ani plików konfiguracyjnych Firebase, chyba że zakres projektu zmieni się świadomie.
+
+---
+
+## 8. Końcowa lista kontrolna
+
+Przed commitem sprawdź:
+
+- nowa opcja języka istnieje w każdym wymaganym selektorze,
+- nowy blok języka istnieje w każdym wymaganym obiekcie `translations`,
+- wszystkie wymagane klucze są obecne,
+- żadna etykieta przypadkowo nie została w starym języku,
+- język domyślny został ustawiony tylko tam, gdzie miał być ustawiony,
+- zachowanie PDF instrukcji jest poprawne,
+- statyczny tekst w `index.html` został zaktualizowany, jeśli było to potrzebne,
+- aplikacja nadal działa offline,
+- przypadkowo nie dodano wymogu save/load albo Firebase.
+
+---
+
+## 9. Szybki test
+
+1. Otwórz `index.html`.
+2. Otwórz `XPCalculator.html`.
+3. Wybierz nowy język.
+4. Sprawdź, czy wszystkie etykiety, nagłówki, przyciski i tekst tabel referencyjnych się zmieniły.
+5. Odśwież stronę i sprawdź język domyślny, jeśli został zmieniony.
+6. Otwórz `CharacterCreation.html`.
+7. Wybierz nowy język.
+8. Sprawdź wszystkie etykiety, przyciski, ostrzeżenia, modale i tabele referencyjne.
+9. Kliknij **Instruction / Manual** i sprawdź zachowanie PDF.
+10. Odłącz sieć i potwierdź, że kalkulator nadal działa lokalnie.
