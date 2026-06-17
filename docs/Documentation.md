@@ -1,16 +1,27 @@
-# Documentation (Technical)
+# Technical documentation — WnG Offline Calculator (EN)
 
-## 1. Purpose and module scope
-This repository is an **offline-first, static web module** supporting the *Wrath & Glory* game. All logic runs on the client side (browser), with no backend, no build step, and no external JS/CSS libraries.
+## 1. Purpose and scope
 
-The main goal of this document is to make it possible to recreate the application **1:1** using only this file.
+`WnG_offline_calculator` is an offline-first static browser module for Wrath & Glory character planning.
+
+It contains:
+
+- `index.html` — launcher page,
+- `XPCalculator.html` — XP cost calculator,
+- `CharacterCreation.html` — character creation sheet,
+- `kalkulatorxp.css` — shared visual style,
+- local assets and PDF manuals.
+
+The app is similar to the `Calculators` module from `WnG_Tools`, but this repository intentionally has no Firebase integration. Therefore, it has no cloud save/load functionality.
+
+All logic runs in the browser. There is no backend, no build step, and no required external JavaScript/CSS library.
 
 ---
 
-## 2. Module file structure
+## 2. File structure
 
 ```text
-/workspace/WnG_offline_calculator
+WnG_offline_calculator/
 ├── index.html
 ├── XPCalculator.html
 ├── CharacterCreation.html
@@ -21,302 +32,702 @@ The main goal of this document is to make it possible to recreate the applicatio
 │   ├── en.pdf
 │   └── pl.pdf
 └── docs/
-    ├── Adding_a_new_language_version.md
     ├── README.md
-    └── Documentation.md
+    ├── Documentation.md
+    └── Adding_a_new_language_version.md
 ```
 
-### File roles
-- `index.html` – landing screen (navigation hub), local styles in `<style>`, links to the two modules.
-- `XPCalculator.html` – XP cost calculator for attributes and skills, PL/EN i18n, reference table for species maximum attributes.
-- `CharacterCreation.html` – extended character creation sheet (attributes, skills, talent costs), validations, modals, i18n, and opening instruction PDFs.
-- `kalkulatorxp.css` – shared “green terminal” style used by `XPCalculator.html` and partly by `CharacterCreation.html`.
-- `HowToUse/*.pdf` – instructions opened dynamically based on language.
-- images (`Skull.png`, `Modal_Icon.png`) – branding and confirmation modal graphic.
+## 3. File responsibilities
+
+| File | Responsibility |
+| --- | --- |
+| `index.html` | Landing page / navigation hub. Links to the XP Calculator and Character Creation tools. Uses local embedded styles. |
+| `XPCalculator.html` | Calculates XP cost for increasing attributes and skills. Contains its own JavaScript logic and translations. |
+| `CharacterCreation.html` | Character creation sheet with attributes, skills, talent costs, validation, modals, language switching, and PDF links. |
+| `kalkulatorxp.css` | Shared green terminal/cogitator visual system used by calculator pages. |
+| `Skull.png` | Branding/logo asset used by the landing page. |
+| `Modal_Icon.png` | Modal/confirmation visual asset used by Character Creation. |
+| `HowToUse/en.pdf` | English manual opened from Character Creation. |
+| `HowToUse/pl.pdf` | Polish manual opened from Character Creation. |
 
 ---
 
-## 3. Dependencies between files
+## 4. Offline-only architecture
 
-## 3.1 Navigation dependencies
-- `index.html` -> `XPCalculator.html`
-- `index.html` -> `CharacterCreation.html`
-- `XPCalculator.html` -> `index.html` ("Main Page" button)
-- `CharacterCreation.html` -> `index.html` (back button)
+This repository must remain offline/static unless explicitly changed in the future.
 
-## 3.2 Style dependencies
-- `XPCalculator.html` loads `kalkulatorxp.css` via `<link rel="stylesheet">`.
-- `CharacterCreation.html` loads `kalkulatorxp.css` + has extra local styles in `<style>` (including modals).
-- `index.html` is styled only locally (no import of `kalkulatorxp.css`).
+It does not use:
 
-## 3.3 Asset and data dependencies
-- `index.html` uses `Skull.png`.
-- `CharacterCreation.html` uses `Modal_Icon.png` in the language-change confirmation modal.
-- `CharacterCreation.html` opens `HowToUse/en.pdf` or `HowToUse/pl.pdf` based on `currentLanguage`.
-- `XPCalculator.html` and `CharacterCreation.html` have independent but semantically aligned XP cost tables and limits.
+- Firebase Authentication,
+- Cloud Firestore,
+- Realtime Database,
+- Firebase Storage,
+- service account files,
+- backend API,
+- Node.js runtime,
+- build pipeline.
 
----
+All calculations are performed in browser-side JavaScript embedded in the HTML files.
 
-## 4. Styles, layout, color palette, fonts, spacing, responsiveness
-
-## 4.1 Visual system
-The theme is consistently “retro terminal / cogitator”:
-- background: dark green + radial gradients,
-- containers: black panels,
-- accent: neon green,
-- glow: green blurred outlines and shadows.
-
-## 4.2 Color tokens (CSS custom properties)
-Shared variables (in `:root` in `kalkulatorxp.css`):
-- base: `--bg`, `--panel`, `--panel2`
-- text: `--text`, `--text2`, `--muted`, `--code`
-- borders: `--border`, `--b`, `--b2`, `--div`
-- states: `--zebra`, `--hover`
-- effects: `--glow`, `--glowH`
-
-Sample values:
-- main accent: `#16c60c`
-- text: `#9cf09c`
-- base background: `#031605`
-
-## 4.3 Fonts
-Global monospace stack:
-`"Consolas", "Fira Code", "Source Code Pro", monospace`.
-
-## 4.4 Layout
-- `XPCalculator.html`: 2-column grid layout (`.main { grid-template-columns: 360px 1fr; }`) with instruction panel and calculation area.
-- `CharacterCreation.html`: single `.wrapper` container (max width ~1100px), tabular sections, and absolutely positioned language switch.
-- `index.html`: centered panel with logo and buttons.
-
-## 4.5 Spacing and rhythm
-- dominant spacing: 8/10/12/14/16/24 px,
-- border radius: 4/6/10 px,
-- uppercase + letter-spacing for headers and buttons.
-
-## 4.6 Responsiveness
-- `kalkulatorxp.css` has a breakpoint `@media (max-width: 980px)` switching the XP calculator to a single-column layout.
-- Tables use scroll containers (`overflow:auto` / `overflow-x:auto`) to prevent layout breaking on small screens.
-- `index.html` uses `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))` for responsive buttons.
+If save/load is added in the future, documentation must clearly say that the repository is no longer a purely offline calculator.
 
 ---
 
-## 5. JavaScript logic – function details
+## 5. Navigation dependencies
 
-## 5.1 `XPCalculator.html`
+Current navigation paths:
 
-### Data and configuration
-- `attributeCosts`: cumulative cost table for levels 0..12.
-- `skillCosts`: cumulative cost table for levels 0..8.
-- `translations`: i18n object (`pl`, `en`) containing:
-  - `labels` (UI text),
-  - `races` (species names),
-  - `attributes` (attribute names).
-- `attributeMaximumRows` + `attributeKeys`: data for the species max-attributes reference table.
+```text
+index.html -> XPCalculator.html
+index.html -> CharacterCreation.html
+XPCalculator.html -> index.html
+CharacterCreation.html -> index.html
+```
 
-### Functions and responsibilities
-1. `clampValue(value, min, max)`
-   - **what it does:** normalizes numeric input to int and clamps to range.
-   - **where used:** `recalcTable`.
-   - **why:** protects against out-of-range values and `NaN`.
-
-2. `calculateRowCost(current, target, costs)`
-   - **what it does:** returns the cost for `current -> target` as the difference of cumulative values; when `target <= current`, cost = 0.
-   - **where:** `recalcTable`.
-   - **why:** models the rule of paying only for level increases.
-
-3. `recalcTable(tableId, costs, min, max)`
-   - **what it does:** for each table row, calculates cost and writes it to `.cost`; returns subtotal.
-   - **where:** `recalcAll`.
-   - **why:** standardizes recalculation for attributes and skills.
-
-4. `recalcAll()`
-   - **what it does:** sums attributes subtotal + skills subtotal and updates `#totalXp`.
-   - **where:** `input/change` events, initialization, reset.
-   - **why:** central result update point.
-
-5. `renderMaxAttributesTable(lang)`
-   - **what it does:** renders the species/max-attributes reference table HTML in the selected language.
-   - **where:** `applyLanguage`.
-   - **why:** keeps translations and reference data consistent with active language.
-
-6. `applyLanguage(lang)`
-   - **what it does:** replaces all UI labels and headers, sets `document.lang`.
-   - **where:** init + `change` on `#languageSelect`.
-   - **why:** full internationalization without page reload.
-
-### Interface mechanics
-- automatic recalculation on `input` and `change` for numeric fields,
-- `Reset` clears all fields and recalculates total,
-- language switch works without data reset (in this module).
-
-## 5.2 `CharacterCreation.html`
-
-### Data and configuration
-- `translations` (`pl`, `en`) contains:
-  - `labels`,
-  - attribute abbreviations,
-  - skill labels (2 columns of 9),
-  - error messages,
-  - species names and max-attributes headers.
-- `attributeCosts` (1..12) and `skillCosts` (0..8).
-- `maxAttributeRows`, `maxAttributeKeys`.
-- `TALENT_COUNT = 20`.
-
-### Functions and responsibilities
-1. `updateLanguage(lang)`
-   - **what it does:** updates all UI text using dictionary data; refreshes max-attributes table if modal is open.
-   - **where:** init, after confirmed language change.
-   - **why:** full runtime language switch.
-
-2. `renderSpeciesMaxTable()`
-   - **what it does:** builds the max-attributes table `thead` and `tbody` via DOM API.
-   - **where:** modal open, `updateLanguage` while modal is open.
-   - **why:** ensures dynamic localization of headers and species names.
-
-3. `resetAll()`
-   - **what it does:** resets form to defaults (XP pool=155, attributes=1 except Speed=6, skills=0, talents empty/0).
-   - **where:** after confirmed language change.
-   - **why:** intentional data-integrity reset during language change.
-
-4. `recalcXP()`
-   - **what it does:**
-     - validates and clamps inputs,
-     - calculates attribute cost (sum of cumulative costs of final levels),
-     - calculates skill cost,
-     - adds manual talent costs,
-     - computes `xpRemaining = xpPool - xpSpent`,
-     - triggers error validations.
-   - **where:** most input events, init, reset.
-   - **why:** main module calculation engine.
-
-5. `checkSkillTree()`
-   - **what it does:** validates “Tree of Learning”: for each skill with `level > 1`, count of active skills (`>0`) must be >= `level`.
-   - **where:** called by `recalcXP()` if XP limit is not exceeded.
-   - **why:** implementation of rulebook rule shown in UI.
-
-6. `displayError(msg)`
-   - **what it does:** writes message to `#errorMessage`.
-   - **why:** single error presentation point.
-
-7. `attachDefaultOnBlur(selector, defaultValue)`
-   - **what it does:** fills empty/invalid fields with default values on blur.
-   - **why:** stabilizes input data and avoids `NaN`.
-
-8. `adjustTalentFontSize(el)`
-   - **what it does:** reduces font size from 16px down to min 10px until text fits in `textarea`.
-   - **why:** improves readability of long talent names without breaking layout.
-
-9. `toggleConfirmModal`, `showConfirmationModal`, `showInfoModal`
-   - **what they do:** confirmation/info modal infrastructure based on Promise and event cleanup.
-   - **where:** language change (confirmation), potentially other info actions.
-   - **why:** asynchronous, reusable dialog mechanics.
-
-10. `toggleSpeciesMaxModal(forceOpen)`
-   - **what it does:** controls open/close of max-attributes modal and `aria-hidden`.
-   - **why:** accessibility + UI control.
-
-### Interface mechanics
-- language change requires confirmation and resets data,
-- ESC closes modals,
-- clicking overlay closes modal,
-- instruction button opens the appropriate PDF,
-- numeric fields react live (`input` + `change`).
+When copying the app, keep relative paths intact or update the relevant links.
 
 ---
 
-## 6. Calculation logic
+## 6. Style dependencies
 
-## 6.1 Cumulative cost model
-Attributes and skills are calculated with cumulative costs, e.g. in the XP calculator:
+- `XPCalculator.html` loads `kalkulatorxp.css`.
+- `CharacterCreation.html` loads `kalkulatorxp.css` and may also contain extra local styles.
+- `index.html` uses local embedded styles and does not need `kalkulatorxp.css` unless changed later.
+
+The visual system uses a dark green terminal/cogitator style:
+
+- dark background,
+- black panels,
+- neon green borders and text,
+- green glow effects,
+- monospace fonts,
+- responsive tables and panels.
+
+Shared font stack:
+
+```text
+"Consolas", "Fira Code", "Source Code Pro", monospace
+```
+
+---
+
+## 7. Asset dependencies
+
+Important asset dependencies:
+
+| Asset | Used by | Purpose |
+| --- | --- | --- |
+| `Skull.png` | `index.html` | Landing page logo. |
+| `Modal_Icon.png` | `CharacterCreation.html` | Confirmation/info modal icon. |
+| `HowToUse/en.pdf` | `CharacterCreation.html` | English manual. |
+| `HowToUse/pl.pdf` | `CharacterCreation.html` | Polish manual. |
+
+If any asset path changes, update all references in HTML and documentation.
+
+---
+
+## 8. XP Calculator logic
+
+`XPCalculator.html` contains the XP difference calculator.
+
+Important data structures:
+
+```text
+attributeCosts
+skillCosts
+translations
+attributeMaximumRows
+attributeKeys
+```
+
+Important behavior:
+
+- user enters current and target values,
+- values are clamped to allowed ranges,
+- row cost is calculated as a difference between cumulative cost values,
+- subtotal and total XP update automatically,
+- maximum attribute values table is rendered as a reference table,
+- language switch updates labels and reference table text.
+
+Typical row cost model:
 
 ```js
 rowCost = costs[target] - costs[current]
 ```
 
-- **what it does:** calculates the transition cost between levels.
-- **where:** `calculateRowCost()` in `XPCalculator.html`.
-- **why:** safer and simpler than step-by-step summation.
-
-In `CharacterCreation.html`, section cost is calculated as the sum of cumulative costs of entered final levels (without a base “current” value), which matches character creation from the starting level.
-
-## 6.2 Range validations
-- attributes: 1..12 (or 0..12 in XP Calculator because this module calculates a difference),
-- skills: 0..8,
-- talent costs: >=0,
-- `xpPool`: integer >=0.
-
-## 6.3 Rule validations
-- XP pool exceeded -> error “Too much XP spent”.
-- Tree of Learning rule -> error when relation between active-skill count and levels is not satisfied.
+When `target <= current`, cost should be `0`.
 
 ---
 
-## 7. Data structures (in-memory)
+## 9. Character Creation logic
 
-## 7.1 i18n dictionaries
-In both modules, i18n data is stored as nested objects:
-- level 1: language code (`pl`, `en`),
-- level 2: sections (`labels`, `errors`, `races`, etc.),
-- level 3: keys used by DOM updates.
+`CharacterCreation.html` contains the character creation sheet.
 
-## 7.2 Cost tables
-`number -> number` maps representing cumulative cost for each level.
+Important data structures:
 
-## 7.3 Species reference table data
-Arrays of objects:
-```js
-{ race: 'race_2', values: [12, 12, 7, 7, 8, 7, 7, 7] }
+```text
+translations
+attributeCosts
+skillCosts
+maxAttributeRows
+maxAttributeKeys
+TALENT_COUNT
 ```
-- **what it does:** stores max attributes per species.
-- **where:** rendering reference tables in both modules.
-- **why:** simplifies species-name translations and consistent rendering.
+
+Important behavior:
+
+- default XP pool is `155`,
+- attributes and skills are entered as final values,
+- talent/manual cost rows are added to total cost,
+- remaining XP is calculated as `xpPool - xpSpent`,
+- input values are validated and clamped,
+- Tree of Learning rule is checked,
+- maximum attribute values table opens in a modal,
+- manual PDF opens based on the current language,
+- language change may ask for confirmation and reset current values.
 
 ---
 
-## 8. Supporting scripts
-No standalone `.js` files and no build/test tooling. All JS is embedded inline in HTML documents.
+## 10. Calculation rules
 
-Consequence: to recreate the module 1:1, preserve:
-- function and constant declaration order,
-- identical HTML element `id`s,
-- identical CSS class names and selectors used by JS.
+### 10.1 XP Calculator
+
+The XP Calculator calculates transition cost:
+
+```text
+current value -> target value
+```
+
+It uses cumulative cost tables and subtracts current cost from target cost.
+
+### 10.2 Character Creation
+
+Character Creation calculates the cost of final values during character creation. It does not use a current-to-target transition model for the main character sheet.
+
+### 10.3 Validation ranges
+
+Expected ranges:
+
+| Field | Range |
+| --- | --- |
+| XP Calculator attributes | 0..12 where supported by the page logic |
+| Character Creation attributes | 1..12 |
+| Skills | 0..8 |
+| Talent/manual costs | 0 or higher |
+| XP pool | 0 or higher |
+
+### 10.4 Rule warnings
+
+Expected warning areas:
+
+- XP pool exceeded,
+- Tree of Learning rule violation.
 
 ---
 
-## 9. Procedure to recreate module 1:1 after file loss
+## 11. Language support
 
-1. **Create directory structure** exactly as in section 2.
-2. **Recreate `kalkulatorxp.css`** with `:root` tokens, global rules, components (`.topbar`, `.panel`, `.dataTable`, `.btn`), and media query `max-width: 980px`.
-3. **Recreate `index.html`**:
-   - local `<style>` with the same theme,
-   - `<main>` with `Skull.png` logo,
-   - links to `XPCalculator.html` and `CharacterCreation.html`.
-4. **Recreate `XPCalculator.html`**:
-   - topbar + panel + workspace layout,
-   - two input tables (`attributesTable`, `skillsTable`) + cost column,
-   - max-attributes reference table,
-   - JS: i18n, cost tables, `recalcAll`, `applyLanguage`, reset.
-5. **Recreate `CharacterCreation.html`**:
-   - XP section, attribute/skill/talent tables,
-   - modals: `speciesMaxModal`, `confirmModal`,
-   - JS: i18n, `recalcXP`, `checkSkillTree`, modal handling, reset on language change.
-6. **Upload binary assets**:
-   - `Skull.png`, `Modal_Icon.png`, `HowToUse/en.pdf`, `HowToUse/pl.pdf`.
-7. **Manual verification**:
-   - open `index.html` without a server,
-   - go to both modules,
-   - verify language switching, calculations, errors, PDF opening, and ESC behavior in modals.
+The app currently supports English and Polish.
+
+Important implementation points:
+
+- translations are stored inside HTML files,
+- there are no separate translation JSON files,
+- `XPCalculator.html` and `CharacterCreation.html` have separate translation dictionaries,
+- `index.html` may contain static text rather than a full translation system,
+- startup language is controlled by `currentLanguage` in each main tool page.
+
+Default language locations:
+
+| File | Default language variable |
+| --- | --- |
+| `XPCalculator.html` | `let currentLanguage = "en";` |
+| `CharacterCreation.html` | `let currentLanguage = 'en';` |
+
+Detailed language instructions:
+
+```text
+docs/Adding_a_new_language_version.md
+```
 
 ---
 
-## 10. Minimal 1:1 compliance checklist
-- [ ] identical file names and relative paths,
-- [ ] identical form-field `id`s (JS relies on hard-coded selectors),
-- [ ] identical input `min/max` ranges,
-- [ ] identical `attributeCosts` and `skillCosts` tables,
-- [ ] identical `Tree of Learning` logic,
-- [ ] identical i18n texts (PL/EN),
-- [ ] identical CSS classes and breakpoints,
-- [ ] PDF and image assets present in the same locations.
+## 12. Save/load status
 
-If all points are satisfied, the module should work and look the same as the original.
+There is no save/load functionality in this offline repository.
+
+Do not document Firebase setup for this repo unless Firebase is actually added later.
+
+Current expected behavior:
+
+- no login,
+- no Firebase config file,
+- no Firestore path,
+- no cloud save button,
+- no cloud load button,
+- no persistence guarantee after closing or refreshing the page.
+
+Manual alternatives:
+
+- print page,
+- screenshot/export manually,
+- copy values into notes,
+- keep browser tab open while working.
+
+---
+
+## 13. Accessibility and modal behavior
+
+Expected modal behavior:
+
+- confirmation/info modals can be closed intentionally,
+- Escape key closes modals where implemented,
+- overlay click may close modals where implemented,
+- `aria-hidden` or equivalent accessibility state should stay synchronized when implemented,
+- focus and keyboard behavior should be tested after modal changes.
+
+---
+
+## 14. What to update when formulas or rules change
+
+When XP costs or character creation rules change, update:
+
+1. cost tables in `XPCalculator.html`,
+2. cost tables in `CharacterCreation.html`,
+3. validation ranges,
+4. warning messages,
+5. user guide,
+6. this technical documentation,
+7. manual PDFs if they describe the affected rule.
+
+---
+
+## 15. What to update when adding a new language
+
+When adding a new language, update:
+
+1. language selector options in each relevant HTML file,
+2. `translations` in `XPCalculator.html`,
+3. `translations` in `CharacterCreation.html`,
+4. static text in `index.html`,
+5. manual PDF links if language-specific manuals are added,
+6. `docs/Adding_a_new_language_version.md`,
+7. `docs/README.md`,
+8. this file.
+
+---
+
+## 16. Control tests
+
+| Test | Steps | Expected result |
+| --- | --- | --- |
+| Open launcher | Open `index.html`. | Navigation page appears. |
+| Open XP Calculator | Click/open `XPCalculator.html`. | XP Calculator appears. |
+| XP calculation | Enter current and target values. | Row costs and total update. |
+| XP reset | Click Reset values. | Editable values reset/clear. |
+| Open Character Creation | Click/open `CharacterCreation.html`. | Character sheet appears. |
+| Character calculation | Enter attributes, skills, and talent costs. | Total/remaining XP updates. |
+| XP pool exceeded | Enter values above the pool. | Warning appears. |
+| Tree of Learning | Enter values that break the rule. | Warning appears. |
+| Manual PDF | Click Instruction / Manual. | Correct language PDF opens. |
+| Maximum attributes | Click Maximum attribute values. | Reference modal opens. |
+| Language switch | Switch EN/PL/EN. | Labels update; reset behavior matches current design. |
+| Offline use | Disconnect network and open local files. | Core calculations still work. |
+| No save/load | Look for cloud save/load behavior. | No Firebase save/load is present. |
+
+---
+
+## 17. Rebuild checklist
+
+To rebuild the module:
+
+1. Restore `index.html`.
+2. Restore `XPCalculator.html`.
+3. Restore `CharacterCreation.html`.
+4. Restore `kalkulatorxp.css`.
+5. Restore `Skull.png` and `Modal_Icon.png`.
+6. Restore `HowToUse/en.pdf` and `HowToUse/pl.pdf`.
+7. Restore `docs/README.md`.
+8. Restore `docs/Documentation.md`.
+9. Restore `docs/Adding_a_new_language_version.md`.
+10. Verify relative paths.
+11. Run all control tests.
+
+---
+
+## 18. Known release notes
+
+- This repository is offline/static.
+- It has no Firebase integration.
+- It has no cloud save/load functionality.
+- All JavaScript is embedded in HTML files.
+- The UI supports English and Polish.
+- Language switching may reset current form values by design.
+
+---
+
+# Dokumentacja techniczna — WnG Offline Calculator (PL)
+
+## 1. Cel i zakres
+
+`WnG_offline_calculator` to offline’owy, statyczny moduł przeglądarkowy do planowania postaci w Wrath & Glory.
+
+Zawiera:
+
+- `index.html` — stronę startową,
+- `XPCalculator.html` — kalkulator kosztów XP,
+- `CharacterCreation.html` — arkusz tworzenia postaci,
+- `kalkulatorxp.css` — wspólny styl wizualny,
+- lokalne assety i instrukcje PDF.
+
+Aplikacja jest podobna do modułu `Calculators` z repozytorium `WnG_Tools`, ale to repozytorium celowo nie ma integracji z Firebase. W związku z tym nie ma funkcjonalności zapisu/odczytu w chmurze.
+
+Cała logika działa w przeglądarce. Nie ma backendu, procesu budowania ani wymaganej zewnętrznej biblioteki JavaScript/CSS.
+
+---
+
+## 2. Struktura plików
+
+```text
+WnG_offline_calculator/
+├── index.html
+├── XPCalculator.html
+├── CharacterCreation.html
+├── kalkulatorxp.css
+├── Skull.png
+├── Modal_Icon.png
+├── HowToUse/
+│   ├── en.pdf
+│   └── pl.pdf
+└── docs/
+    ├── README.md
+    ├── Documentation.md
+    └── Adding_a_new_language_version.md
+```
+
+## 3. Odpowiedzialność plików
+
+| Plik | Odpowiedzialność |
+| --- | --- |
+| `index.html` | Strona startowa / centrum nawigacji. Linkuje do XP Calculator i Character Creation. Używa lokalnych styli osadzonych w pliku. |
+| `XPCalculator.html` | Oblicza koszt XP za podnoszenie atrybutów i umiejętności. Zawiera własną logikę JavaScript oraz tłumaczenia. |
+| `CharacterCreation.html` | Arkusz tworzenia postaci z atrybutami, umiejętnościami, kosztami talentów, walidacją, modalami, zmianą języka i linkami do PDF. |
+| `kalkulatorxp.css` | Wspólny zielony terminalowy/cogitatorowy styl kalkulatorów. |
+| `Skull.png` | Asset brandingowy/logo strony startowej. |
+| `Modal_Icon.png` | Asset używany w modalach potwierdzenia/informacji. |
+| `HowToUse/en.pdf` | Angielska instrukcja otwierana z Character Creation. |
+| `HowToUse/pl.pdf` | Polska instrukcja otwierana z Character Creation. |
+
+---
+
+## 4. Architektura offline-only
+
+To repozytorium powinno pozostać offline/statyczne, chyba że zostanie to w przyszłości świadomie zmienione.
+
+Nie używa:
+
+- Firebase Authentication,
+- Cloud Firestore,
+- Realtime Database,
+- Firebase Storage,
+- plików kont serwisowych,
+- backend API,
+- środowiska Node.js,
+- procesu budowania.
+
+Wszystkie obliczenia wykonywane są przez JavaScript osadzony w plikach HTML.
+
+Jeśli w przyszłości zostanie dodany zapis/odczyt, dokumentacja musi jasno informować, że repozytorium nie jest już czysto offline’owym kalkulatorem.
+
+---
+
+## 5. Zależności nawigacyjne
+
+Aktualne ścieżki nawigacji:
+
+```text
+index.html -> XPCalculator.html
+index.html -> CharacterCreation.html
+XPCalculator.html -> index.html
+CharacterCreation.html -> index.html
+```
+
+Przy kopiowaniu aplikacji zachowaj ścieżki względne albo popraw odpowiednie linki.
+
+---
+
+## 6. Zależności stylów
+
+- `XPCalculator.html` ładuje `kalkulatorxp.css`.
+- `CharacterCreation.html` ładuje `kalkulatorxp.css` i może zawierać dodatkowe lokalne style.
+- `index.html` używa lokalnych styli osadzonych i nie wymaga `kalkulatorxp.css`, chyba że zostanie to zmienione później.
+
+System wizualny używa ciemnego zielonego stylu terminala/cogitatora:
+
+- ciemne tło,
+- czarne panele,
+- neonowo zielone ramki i tekst,
+- zielone efekty glow,
+- fonty monospace,
+- responsywne tabele i panele.
+
+Wspólny font-stack:
+
+```text
+"Consolas", "Fira Code", "Source Code Pro", monospace
+```
+
+---
+
+## 7. Zależności assetów
+
+Najważniejsze zależności assetów:
+
+| Asset | Używany przez | Cel |
+| --- | --- | --- |
+| `Skull.png` | `index.html` | Logo strony startowej. |
+| `Modal_Icon.png` | `CharacterCreation.html` | Ikona modala potwierdzenia/informacji. |
+| `HowToUse/en.pdf` | `CharacterCreation.html` | Angielska instrukcja. |
+| `HowToUse/pl.pdf` | `CharacterCreation.html` | Polska instrukcja. |
+
+Jeśli zmieni się ścieżka do assetu, popraw wszystkie odwołania w HTML i dokumentacji.
+
+---
+
+## 8. Logika XP Calculator
+
+`XPCalculator.html` zawiera kalkulator różnicy kosztów XP.
+
+Ważne struktury danych:
+
+```text
+attributeCosts
+skillCosts
+translations
+attributeMaximumRows
+attributeKeys
+```
+
+Ważne zachowanie:
+
+- użytkownik wpisuje wartości aktualne i docelowe,
+- wartości są ograniczane do dozwolonych zakresów,
+- koszt wiersza jest liczony jako różnica między wartościami z tabeli kosztów skumulowanych,
+- subtotal i całkowity XP aktualizują się automatycznie,
+- tabela maksymalnych wartości atrybutów jest renderowana jako tabela referencyjna,
+- zmiana języka aktualizuje etykiety i tekst tabeli referencyjnej.
+
+Typowy model kosztu wiersza:
+
+```js
+rowCost = costs[target] - costs[current]
+```
+
+Gdy `target <= current`, koszt powinien wynosić `0`.
+
+---
+
+## 9. Logika Character Creation
+
+`CharacterCreation.html` zawiera arkusz tworzenia postaci.
+
+Ważne struktury danych:
+
+```text
+translations
+attributeCosts
+skillCosts
+maxAttributeRows
+maxAttributeKeys
+TALENT_COUNT
+```
+
+Ważne zachowanie:
+
+- domyślna pula XP to `155`,
+- atrybuty i umiejętności są wpisywane jako wartości końcowe,
+- wiersze talentów/ręcznych kosztów są dodawane do całkowitego kosztu,
+- pozostały XP jest liczony jako `xpPool - xpSpent`,
+- wartości wejściowe są walidowane i ograniczane,
+- sprawdzana jest zasada Tree of Learning,
+- tabela maksymalnych wartości atrybutów otwiera się w modalu,
+- instrukcja PDF otwiera się na podstawie aktualnego języka,
+- zmiana języka może prosić o potwierdzenie i resetować aktualne wartości.
+
+---
+
+## 10. Reguły obliczeń
+
+### 10.1 XP Calculator
+
+XP Calculator liczy koszt przejścia:
+
+```text
+wartość aktualna -> wartość docelowa
+```
+
+Korzysta z tabel kosztów skumulowanych i odejmuje koszt aktualny od kosztu docelowego.
+
+### 10.2 Character Creation
+
+Character Creation liczy koszt wartości końcowych podczas tworzenia postaci. Nie używa głównego modelu przejścia aktualna -> docelowa dla arkusza postaci.
+
+### 10.3 Zakresy walidacji
+
+Oczekiwane zakresy:
+
+| Pole | Zakres |
+| --- | --- |
+| Atrybuty w XP Calculator | 0..12 tam, gdzie obsługuje to logika strony |
+| Atrybuty w Character Creation | 1..12 |
+| Umiejętności | 0..8 |
+| Koszty talentów/ręczne | 0 lub więcej |
+| Pula XP | 0 lub więcej |
+
+### 10.4 Ostrzeżenia zasad
+
+Oczekiwane obszary ostrzeżeń:
+
+- przekroczenie puli XP,
+- naruszenie zasady Tree of Learning.
+
+---
+
+## 11. Obsługa języków
+
+Aplikacja obecnie obsługuje angielski i polski.
+
+Ważne elementy implementacji:
+
+- tłumaczenia są zapisane bezpośrednio w plikach HTML,
+- nie ma osobnych plików JSON z tłumaczeniami,
+- `XPCalculator.html` i `CharacterCreation.html` mają osobne słowniki tłumaczeń,
+- `index.html` może zawierać tekst statyczny zamiast pełnego systemu tłumaczeń,
+- język startowy jest kontrolowany przez `currentLanguage` w każdej głównej stronie narzędzia.
+
+Lokalizacja języka domyślnego:
+
+| Plik | Zmienna języka domyślnego |
+| --- | --- |
+| `XPCalculator.html` | `let currentLanguage = "en";` |
+| `CharacterCreation.html` | `let currentLanguage = 'en';` |
+
+Szczegółowa instrukcja językowa:
+
+```text
+docs/Adding_a_new_language_version.md
+```
+
+---
+
+## 12. Status zapisu/odczytu
+
+W tym repozytorium offline nie ma funkcjonalności save/load.
+
+Nie dokumentuj konfiguracji Firebase dla tego repo, chyba że Firebase zostanie faktycznie dodany później.
+
+Aktualne oczekiwane zachowanie:
+
+- brak logowania,
+- brak pliku konfiguracji Firebase,
+- brak ścieżki Firestore,
+- brak przycisku zapisu w chmurze,
+- brak przycisku odczytu z chmury,
+- brak gwarancji zachowania danych po zamknięciu albo odświeżeniu strony.
+
+Ręczne alternatywy:
+
+- wydruk strony,
+- zrzut ekranu/ręczny eksport,
+- skopiowanie wartości do notatek,
+- pozostawienie otwartej karty przeglądarki podczas pracy.
+
+---
+
+## 13. Dostępność i zachowanie modali
+
+Oczekiwane zachowanie modali:
+
+- modale potwierdzenia/informacji można celowo zamknąć,
+- klawisz Escape zamyka modale tam, gdzie jest to zaimplementowane,
+- kliknięcie overlayu może zamykać modale tam, gdzie jest to zaimplementowane,
+- `aria-hidden` albo równoważny stan dostępności powinien pozostawać zsynchronizowany tam, gdzie jest używany,
+- po zmianach w modalach trzeba testować fokus i obsługę klawiatury.
+
+---
+
+## 14. Co aktualizować przy zmianie formuł albo zasad
+
+Gdy zmienią się koszty XP albo zasady tworzenia postaci, zaktualizuj:
+
+1. tabele kosztów w `XPCalculator.html`,
+2. tabele kosztów w `CharacterCreation.html`,
+3. zakresy walidacji,
+4. komunikaty ostrzeżeń,
+5. instrukcję użytkownika,
+6. tę dokumentację techniczną,
+7. instrukcje PDF, jeśli opisują zmienioną zasadę.
+
+---
+
+## 15. Co aktualizować przy dodawaniu nowego języka
+
+Przy dodawaniu nowego języka zaktualizuj:
+
+1. opcje wyboru języka w odpowiednich plikach HTML,
+2. `translations` w `XPCalculator.html`,
+3. `translations` w `CharacterCreation.html`,
+4. tekst statyczny w `index.html`,
+5. linki do PDF, jeśli dodawane są językowe instrukcje,
+6. `docs/Adding_a_new_language_version.md`,
+7. `docs/README.md`,
+8. ten plik.
+
+---
+
+## 16. Testy kontrolne
+
+| Test | Kroki | Oczekiwany wynik |
+| --- | --- | --- |
+| Otwarcie strony startowej | Otwórz `index.html`. | Pojawia się strona nawigacji. |
+| Otwarcie XP Calculator | Kliknij/otwórz `XPCalculator.html`. | Pojawia się XP Calculator. |
+| Obliczenie XP | Wpisz wartości aktualne i docelowe. | Koszty wierszy i suma aktualizują się. |
+| Reset XP | Kliknij Reset values. | Wartości edytowalne resetują się/czyszczą. |
+| Otwarcie Character Creation | Kliknij/otwórz `CharacterCreation.html`. | Pojawia się arkusz postaci. |
+| Obliczenia postaci | Wpisz atrybuty, umiejętności i koszty talentów. | Suma/pozostały XP aktualizują się. |
+| Przekroczenie puli XP | Wpisz wartości ponad pulę. | Pojawia się ostrzeżenie. |
+| Tree of Learning | Wpisz wartości łamiące zasadę. | Pojawia się ostrzeżenie. |
+| Instrukcja PDF | Kliknij Instruction / Manual. | Otwiera się PDF w odpowiednim języku. |
+| Maksymalne atrybuty | Kliknij Maximum attribute values. | Otwiera się modal referencyjny. |
+| Zmiana języka | Przełącz EN/PL/EN. | Etykiety się aktualizują; reset odpowiada aktualnemu projektowi. |
+| Tryb offline | Odłącz sieć i otwórz lokalne pliki. | Podstawowe obliczenia nadal działają. |
+| Brak save/load | Sprawdź zachowanie zapisu w chmurze. | Brak Firebase save/load. |
+
+---
+
+## 17. Lista odbudowy
+
+Aby odbudować moduł:
+
+1. Przywróć `index.html`.
+2. Przywróć `XPCalculator.html`.
+3. Przywróć `CharacterCreation.html`.
+4. Przywróć `kalkulatorxp.css`.
+5. Przywróć `Skull.png` i `Modal_Icon.png`.
+6. Przywróć `HowToUse/en.pdf` i `HowToUse/pl.pdf`.
+7. Przywróć `docs/README.md`.
+8. Przywróć `docs/Documentation.md`.
+9. Przywróć `docs/Adding_a_new_language_version.md`.
+10. Sprawdź ścieżki względne.
+11. Uruchom wszystkie testy kontrolne.
+
+---
+
+## 18. Znane uwagi wydania
+
+- To repozytorium jest offline/statyczne.
+- Nie ma integracji z Firebase.
+- Nie ma zapisu/odczytu w chmurze.
+- Cały JavaScript jest osadzony w plikach HTML.
+- Interfejs obsługuje angielski i polski.
+- Zmiana języka może celowo resetować aktualne wartości formularza.
